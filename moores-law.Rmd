@@ -1,0 +1,46 @@
+---
+title: "moores-law"
+author: "Alex Cookson"
+date: "08/09/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(tidyverse)
+theme_set(theme_light())
+```
+
+
+
+```{r}
+cpu <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-03/cpu.csv") %>%
+  rename(area_mm = area,
+         mftg_process_nm = process)
+
+gpu <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-03/gpu.csv") %>%
+  select(-ref) %>%
+  rename(area_mm = area,
+         mftg_process_nm = process)
+
+ram <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-03/ram.csv") %>%
+  select(-ref) %>%
+  rename(area_mm = area,
+         mftg_process_nm = process) %>%
+  mutate(chip_name = str_replace(chip_name, "N/A", NA_character_),
+         chip_name = str_replace(chip_name, "\\?", NA_character_))
+```
+
+
+
+```{r}
+ram %>% View()
+```
+
