@@ -15,6 +15,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
+library(viridis)
+library(scales)
+
 theme_set(theme_light())
 ```
 
@@ -23,24 +26,92 @@ theme_set(theme_light())
 ```{r}
 cpu <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-03/cpu.csv") %>%
   rename(area_mm = area,
-         mftg_process_nm = process)
+         mftg_process_nm = process,
+         year_introduced = date_of_introduction)
 
 gpu <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-03/gpu.csv") %>%
   select(-ref) %>%
   rename(area_mm = area,
-         mftg_process_nm = process)
+         mftg_process_nm = process,
+         year_introduced = date_of_introduction)
 
 ram <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-03/ram.csv") %>%
   select(-ref) %>%
   rename(area_mm = area,
-         mftg_process_nm = process) %>%
+         mftg_process_nm = process,
+         year_introduced = date_of_introduction) %>%
   mutate(chip_name = str_replace(chip_name, "N/A", NA_character_),
          chip_name = str_replace(chip_name, "\\?", NA_character_))
 ```
 
-
+Who has designed the most types of CPUs over time?
 
 ```{r}
-ram %>% View()
+cpu %>%
+  filter(year_introduced < 2019) %>%
+  mutate(designer = fct_lump(designer, 5),
+         year_introduced_binned = year_introduced %/% 5 * 5) %>%
+  count(year_introduced_binned, designer) %>%
+  mutate(designer = fct_reorder(designer, n, sum)) %>%
+  ggplot(aes(x = year_introduced_binned, y = n, fill = designer)) +
+  geom_col() +
+  scale_fill_viridis(discrete = TRUE, direction = -1) +
+  labs(title = "Who has designed the most types of CPUs?",
+       subtitle = "Year of introduction aggregated into 5-year bins",
+       x = "Year introduced",
+       y = "Number of CPUs designed",
+       fill = "Designer")
 ```
+
+How have the number of transistors changed over time?
+
+```{r}
+cpu %>%
+  mutate(designer = fct_lump(designer, 5)) %>%
+  group_by(year_introduced, designer) %>%
+  summarise(avg_transistor_count = mean(transistor_count, na.rm = TRUE),
+            n = n()) %>%
+  ggplot(aes(x = year_introduced, y = avg_transistor_count)) +
+  geom_line(size = 1) +
+  facet_wrap(~ designer) +
+  scale_y_log10(labels = comma_format())
+```
+
+What is the relationship between number of transistors and size of the manufacturing process?
+
+```{r}
+cpu %>%
+  mutate(designer = fct_lump(designer, 5)) %>%
+  ggplot(aes(x = mftg_process_nm, y = transistor_count, col = year_introduced)) +
+  geom_point(size = 2, alpha = 0.8) +
+  scale_x_log10(labels = comma_format()) +
+  scale_y_log10(labels = comma_format()) +
+  scale_color_viridis_c(direction = -1) +
+  expand_limits(col = 1970:2020) +
+  labs(title = "How is the size of the manufacturing process related to number of transistors?",
+       x = "Size of manufacturing process (nanometres)",
+       y = "Transistor count",
+       col = "Year introduced")
+```
+
+How many transistors can we fit on a square millimetre of CPU board?
+
+```{r}
+cpu %>%
+  mutate(transistors_per_mm = transistor_count / area_mm,
+         designer = fct_lump(designer, 5)) %>%
+  group_by(year = year_introduced %/% 5 * 5,
+           designer) %>%
+  summarise(avg_transistors_per_mm = mean(transistors_per_mm, na.rm = TRUE)) %>%
+  ggplot(aes(x = year, y = avg_transistors_per_mm, col = designer)) +
+  geom_line() +
+  scale_y_log10(labels = comma_format()) +
+  labs(title = "How many transistors can we fit on a square millimetre of board?",
+       subtitle = "Year of introduction aggregated into 5-year bins",
+       x = "Year introduced",
+       y = "Average transistors per square millimetre of board")
+```
+
+
+
 
