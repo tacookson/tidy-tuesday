@@ -26,7 +26,8 @@ safer_parks <- readr::read_csv("https://raw.githubusercontent.com/rfordatascienc
          acc_month = floor_date(acc_date, "month"),
          mechanical = replace_na(mechanical, 0),
          op_error = replace_na(op_error, 0),
-         employee = replace_na(employee, 0)) %>%
+         employee = replace_na(employee, 0),
+         device_category = str_replace(str_to_lower(device_category), "unknown", NA_character_)) %>%
   filter(acc_date >= "2011-01-01",
          acc_date < "2017-01-01")
 ```
@@ -66,18 +67,45 @@ Where are these accidents taking place?
 ```{r}
 safer_parks %>%
   mutate(bus_type = fct_lump(bus_type, 6)) %>%
-  count(bus_type) %>%
-  mutate(bus_type = fct_reorder(bus_type, n)) %>%
-  ggplot(aes(x = bus_type, y = n, fill = bus_type)) +
+  group_by(bus_type) %>%
+  summarise(injuries = sum(num_injured, na.rm = TRUE)) %>%
+  mutate(bus_type = fct_reorder(bus_type, injuries)) %>%
+  ggplot(aes(x = bus_type, y = injuries, fill = bus_type)) +
   geom_col() +
   coord_flip() +
   scale_fill_viridis(discrete = TRUE, direction = -1) +
   scale_y_continuous(label = comma_format()) +
   theme(legend.position = "none") +
   labs(title = "Where are accidents taking place?",
+       subtitle = "Source: Safer Parks, 2011-2016",
        x = "",
-       y = "Number of Accidents")
+       y = "Number of Injuries")
 ```
+
+```{r}
+safer_parks %>%
+  filter(!is.na(device_category)) %>%
+  mutate(device_category = str_to_title(device_category)) %>%
+  group_by(bus_type, device_category) %>%
+  summarise(injured = sum(num_injured, na.rm = TRUE)) %>%
+  ungroup() %>%
+  group_by(bus_type) %>%
+  top_n(4, injured) %>%
+  ungroup() %>%
+  mutate(device_category = drlib::reorder_within(device_category, injured, bus_type)) %>%
+  ggplot(aes(x = device_category, y = injured, fill = bus_type)) +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~ bus_type, scales = "free") +
+  scale_fill_viridis_d(direction = -1) +
+  scale_y_continuous(labels = comma_format()) +
+  theme(legend.position = "none") +
+  labs(title = "What were the most common rides people were injured on?",
+       subtitle = "Source: Safer Parks, 2011-2016",
+       x = "",
+       y = "Number of Injuries")
+```
+
 
 
 
