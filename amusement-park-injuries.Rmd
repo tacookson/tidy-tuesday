@@ -1,0 +1,83 @@
+---
+title: "amusement-park-injuries"
+author: "Alex Cookson"
+date: "10/09/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(viridis)
+
+theme_set(theme_light())
+
+tx_injuries <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-10/tx_injuries.csv")
+
+safer_parks <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-10/saferparks.csv") %>%
+  mutate(acc_date = mdy(acc_date),
+         acc_month = floor_date(acc_date, "month"),
+         mechanical = replace_na(mechanical, 0),
+         op_error = replace_na(op_error, 0),
+         employee = replace_na(employee, 0)) %>%
+  filter(acc_date >= "2011-01-01",
+         acc_date < "2017-01-01")
+```
+
+How many people have been injured over time?
+
+```{r}
+safer_parks %>%
+  group_by(acc_month) %>%
+  summarise(injured = sum(num_injured, na.rm = TRUE)) %>%
+  ggplot(aes(x = acc_month, y = injured)) +
+  geom_col()
+```
+
+What are the seasonal trends? Are more people being injured as time goes on?
+
+```{r}
+safer_parks %>%
+  mutate(year = year(acc_date),
+         month = month(acc_date, label = TRUE)) %>%
+  group_by(year, month) %>%
+  summarise(injured = sum(num_injured, na.rm = TRUE)) %>%
+  ggplot(aes(x = year, y = injured)) +
+  geom_line(col = "dark blue", size = 2) +
+  expand_limits(y = 0) +
+  facet_wrap(~ month, scales = "free_y") +
+  labs(title = "Are more people being injured in amusement parks over time?",
+       x = "",
+       y = "Total Number of People Injured")
+```
+
+Injury counts seem to be getting higher over time, with consistent increases across months.
+
+
+Where are these accidents taking place?
+
+```{r}
+safer_parks %>%
+  mutate(bus_type = fct_lump(bus_type, 6)) %>%
+  count(bus_type) %>%
+  mutate(bus_type = fct_reorder(bus_type, n)) %>%
+  ggplot(aes(x = bus_type, y = n, fill = bus_type)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_viridis(discrete = TRUE, direction = -1) +
+  scale_y_continuous(label = comma_format()) +
+  theme(legend.position = "none") +
+  labs(title = "Where are accidents taking place?",
+       x = "",
+       y = "Number of Accidents")
+```
+
+
+
