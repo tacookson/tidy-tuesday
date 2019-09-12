@@ -39,7 +39,10 @@ safer_parks %>%
   group_by(acc_month) %>%
   summarise(injured = sum(num_injured, na.rm = TRUE)) %>%
   ggplot(aes(x = acc_month, y = injured)) +
-  geom_col()
+  geom_col() +
+  labs(title = "What has the trend of injuries been from 2011-2016?",
+       x = "",
+       y = "Number of Injuries")
 ```
 
 What are the seasonal trends? Are more people being injured as time goes on?
@@ -56,7 +59,7 @@ safer_parks %>%
   facet_wrap(~ month, scales = "free_y") +
   labs(title = "Are more people being injured in amusement parks over time?",
        x = "",
-       y = "Total Number of People Injured")
+       y = "Number of Injuries")
 ```
 
 Injury counts seem to be getting higher over time, with consistent increases across months.
@@ -83,21 +86,25 @@ safer_parks %>%
 ```
 
 ```{r}
+library(drlib)
+
 safer_parks %>%
   filter(!is.na(device_category)) %>%
-  mutate(device_category = str_to_title(device_category)) %>%
+  mutate(device_category = str_to_title(device_category),
+         bus_type = fct_lump(bus_type, 5)) %>%
   group_by(bus_type, device_category) %>%
   summarise(injured = sum(num_injured, na.rm = TRUE)) %>%
   ungroup() %>%
   group_by(bus_type) %>%
   top_n(4, injured) %>%
   ungroup() %>%
-  mutate(device_category = drlib::reorder_within(device_category, injured, bus_type)) %>%
+  mutate(device_category = drlib::reorder_within(device_category, injured, bus_type, sep = " | ")) %>%
   ggplot(aes(x = device_category, y = injured, fill = bus_type)) +
   geom_col() +
   coord_flip() +
   facet_wrap(~ bus_type, scales = "free") +
   scale_fill_viridis_d(direction = -1) +
+  scale_x_reordered() +
   scale_y_continuous(labels = comma_format()) +
   theme(legend.position = "none") +
   labs(title = "What were the most common rides people were injured on?",
@@ -106,6 +113,28 @@ safer_parks %>%
        y = "Number of Injuries")
 ```
 
+Are there any rides to absolutely avoid in Texas?
+
+```{r}
+tx_injuries %>%
+  count(ride_name, name_of_operation, serial_no, sort = TRUE) %>%
+  mutate(ride_operation_name = paste0(ride_name, " (", name_of_operation, ")")) %>%
+  top_n(20, n) %>%
+  mutate(ride_operation_name = fct_reorder(ride_operation_name, n)) %>%
+  ggplot(aes(x = ride_operation_name, y = n, fill = name_of_operation)) +
+  geom_col() +
+  coord_flip() +
+  scale_y_continuous(breaks = 1:10) +
+  theme(legend.position = "none") +
+  labs(title = "AVOID THESE RIDES!",
+       subtitle = "Rides with the most injury reports associated with them")
+```
 
 
+
+```{r}
+tx_injuries %>%
+  filter(ride_name == "Mr. Freeze") %>%
+  pull(cause_of_injury)
+```
 
