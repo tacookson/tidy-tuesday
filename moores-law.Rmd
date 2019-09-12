@@ -1,5 +1,5 @@
 ---
-title: "moores-law"
+title: "Moore's Law"
 author: "Alex Cookson"
 date: "08/09/2019"
 output: html_document
@@ -80,10 +80,12 @@ cpu %>%
 What is the relationship between number of transistors and size of the manufacturing process?
 
 ```{r}
-cpu %>%
+library(plotly)
+
+p <- cpu %>%
   mutate(designer = fct_lump(designer, 5)) %>%
   ggplot(aes(x = mftg_process_nm, y = transistor_count, col = year_introduced)) +
-  geom_point(size = 2, alpha = 0.8) +
+  geom_point(aes(text = paste("processor_name:", processor)), size = 2, alpha = 0.8) +
   scale_x_log10(labels = comma_format()) +
   scale_y_log10(labels = comma_format()) +
   scale_color_viridis_c(direction = -1) +
@@ -92,6 +94,8 @@ cpu %>%
        x = "Size of manufacturing process (nanometres)",
        y = "Transistor count",
        col = "Year introduced")
+
+ggplotly(p)
 ```
 
 How many transistors can we fit on a square millimetre of CPU board?
@@ -104,12 +108,14 @@ cpu %>%
            designer) %>%
   summarise(avg_transistors_per_mm = mean(transistors_per_mm, na.rm = TRUE)) %>%
   ggplot(aes(x = year, y = avg_transistors_per_mm, col = designer)) +
-  geom_line() +
+  geom_line(size = 1) +
   scale_y_log10(labels = comma_format()) +
+  scale_colour_viridis(discrete = TRUE) +
   labs(title = "How many transistors can we fit on a square millimetre of board?",
        subtitle = "Year of introduction aggregated into 5-year bins",
        x = "Year introduced",
-       y = "Average transistors per square millimetre of board")
+       y = "Average transistors per square millimetre of board",
+       col = "Designer")
 ```
 
 
