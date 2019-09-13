@@ -130,11 +130,3 @@ tx_injuries %>%
        subtitle = "Rides with the most injury reports associated with them")
 ```
 
-
-
-```{r}
-tx_injuries %>%
-  filter(ride_name == "Mr. Freeze") %>%
-  pull(cause_of_injury)
-```
-
