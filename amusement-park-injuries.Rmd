@@ -41,6 +41,7 @@ safer_parks %>%
   ggplot(aes(x = acc_month, y = injured)) +
   geom_col() +
   labs(title = "What has the trend of injuries been from 2011-2016?",
+       subtitle = "Each line represents the 2011-2016 trend for a given month",
        x = "",
        y = "Number of Injuries")
 ```
@@ -86,8 +87,6 @@ safer_parks %>%
 ```
 
 ```{r}
-library(drlib)
-
 safer_parks %>%
   filter(!is.na(device_category)) %>%
   mutate(device_category = str_to_title(device_category),
@@ -96,9 +95,9 @@ safer_parks %>%
   summarise(injured = sum(num_injured, na.rm = TRUE)) %>%
   ungroup() %>%
   group_by(bus_type) %>%
-  top_n(4, injured) %>%
+  top_n(6, injured) %>%
   ungroup() %>%
-  mutate(device_category = drlib::reorder_within(device_category, injured, bus_type, sep = " | ")) %>%
+  mutate(device_category = drlib::reorder_within(device_category, injured, bus_type)) %>%
   ggplot(aes(x = device_category, y = injured, fill = bus_type)) +
   geom_col() +
   coord_flip() +
@@ -129,4 +128,30 @@ tx_injuries %>%
   labs(title = "AVOID THESE RIDES!",
        subtitle = "Rides with the most injury reports associated with them")
 ```
+
+
+
+```{r}
+library(tidytext)
+
+accident_words <- safer_parks %>%
+  select(acc_id, acc_date, acc_month, bus_type, device_category, device_type, acc_desc) %>%
+  unnest_tokens(word, acc_desc) %>%
+  anti_join(stop_words, by = "word") %>%
+  filter(! word %in% c("patron", "stated"))
+
+accident_words %>%
+  count(word, sort = TRUE) %>%
+  head(16) %>%
+  mutate(word = str_to_title(word),
+         word = fct_reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "What are the most common words used in accident reports?",
+       subtitle = "Among 8,326 accident reports",
+       x = "",
+       y = "Number of times mentioned")
+```
+
 
