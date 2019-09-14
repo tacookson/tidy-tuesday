@@ -112,24 +112,7 @@ safer_parks %>%
        y = "Number of Injuries")
 ```
 
-Are there any rides to absolutely avoid in Texas?
-
-```{r}
-tx_injuries %>%
-  count(ride_name, name_of_operation, serial_no, sort = TRUE) %>%
-  mutate(ride_operation_name = paste0(ride_name, " (", name_of_operation, ")")) %>%
-  top_n(20, n) %>%
-  mutate(ride_operation_name = fct_reorder(ride_operation_name, n)) %>%
-  ggplot(aes(x = ride_operation_name, y = n, fill = name_of_operation)) +
-  geom_col() +
-  coord_flip() +
-  scale_y_continuous(breaks = 1:10) +
-  theme(legend.position = "none") +
-  labs(title = "AVOID THESE RIDES!",
-       subtitle = "Rides with the most injury reports associated with them")
-```
-
-
+What are the words most associated with accident reports?
 
 ```{r}
 library(tidytext)
@@ -154,4 +137,91 @@ accident_words %>%
        y = "Number of times mentioned")
 ```
 
+Ouch! The top three action verbs associated with injuries are:
+1. Hit
+2. Slide
+3. Fell
 
+What's more, it looks like "head" is the body part most mentioned.
+
+Are certain words more likely to be associated with certain business types?
+
+```{r}
+accident_words %>%
+  count(bus_type, word) %>%
+  bind_tf_idf(word, bus_type, n) %>%
+  filter(n >= 3) %>%   # Many words only appear in accident reports once for a given device_category
+  arrange(-tf_idf) %>%
+  mutate(bus_type = fct_lump(bus_type, 5)) %>%
+  filter(!is.na(bus_type)) %>%
+  group_by(bus_type) %>%
+  top_n(3, wt = n) %>%
+  ungroup() %>%
+  mutate(word = str_to_title(word),
+         word = drlib::reorder_within(word, tf_idf, bus_type),
+         bus_type = fct_reorder(bus_type, -tf_idf, sum),
+         bus_type = fct_relevel(bus_type, "Other", after = 5)) %>%
+  ggplot(aes(x = word, y = tf_idf, fill = bus_type)) +
+  geom_col() +
+  scale_x_reordered() +
+  scale_fill_viridis(discrete = TRUE) +
+  coord_flip() +
+  facet_wrap(~ bus_type, scales = "free_y") +
+  theme(legend.position = "none") +
+  labs(title = "What words from accident report are more particular to a certain type of business?",
+       subtitle = "Using words with the top TF-IDF within a business type",
+       x = "",
+       y = "TF-IDF")
+```
+
+* Trampoline parks are more associated with injuries involving jumping, ankles, and landing
+* Family entertainment centres are more associated with karts
+* Water parks are more associated with tubes (inner tubes, presumably) and slides
+* We should avoid amusement parks, because they are slightly more associated with pain
+
+### Appendix
+
+Looked at individual rides with the most accident report in the tx_injuries dataset, but wasn't feeling the direction or preliminary results.
+
+Are there any rides to absolutely avoid in Texas?
+
+```{r}
+tx_injuries %>%
+  count(ride_name, name_of_operation, serial_no, sort = TRUE) %>%
+  mutate(ride_operation_name = paste0(ride_name, " (", name_of_operation, ")")) %>%
+  top_n(20, n) %>%
+  mutate(ride_operation_name = fct_reorder(ride_operation_name, n)) %>%
+  ggplot(aes(x = ride_operation_name, y = n, fill = name_of_operation)) +
+  geom_col() +
+  coord_flip() +
+  scale_y_continuous(breaks = 1:10) +
+  theme(legend.position = "none") +
+  labs(title = "AVOID THESE RIDES!",
+       subtitle = "Rides with the most injury reports associated with them")
+```
+
+Also looked at categorising words by part of speech, with the idea of looking at, e.g., *what* was injured vs. *how*.
+
+```{r}
+accident_words_detailed <- accident_words %>%
+  left_join(parts_of_speech, by = "word")
+
+accident_words_detailed %>%
+  group_by(pos) %>%
+  summarise(n = n()) %>%
+  ungroup() %>%
+  mutate(pct_of_total = n / sum(n)) %>%
+  arrange(-n)
+
+# ~10% of words couldn't be categorised. We will take a quick look at some examples.
+accident_words_detailed %>%
+  filter(is.na(pos)) %>%
+  select(word, pos) %>%
+  sample_n(10)
+
+accident_words_detailed %>%
+  filter(!is.na(pos)) %>%
+  mutate(pos = fct_lump(pos, 5))
+
+# Many words have been mapped to multiple parts of speech, resulting in duplication of words and uncertainty around what part of speech it actually represents in the description. This is getting into deeper NLP, which would get pretty involved, so we'll put it aside for now.
+```
