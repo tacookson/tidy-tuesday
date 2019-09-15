@@ -97,7 +97,7 @@ bird_counts %>%
   filter(common_name_1 != common_name_2) %>%
   ggplot(aes(x = common_name_2, y = reorder(common_name_1, desc(common_name_1)), fill = correlation)) +
   geom_tile() +
-  scale_fill_gradient2(low = "#a50026", high = "#313695", mid = "#f5f5f5", breaks = c(-0.4, 0, 0.4, 0.8), labels = c("Enemies", "Neutral", "Acquaintances", "Best Friends")) +
+  scale_fill_gradient2(low = "#a50026", high = "#313695", mid = "#f5f5f5", breaks = c(-0.4, 0, 0.4, 0.8), labels = c("Enemies (-0.4)", "Neutral (0)", "Acquaintances (0.4)", "Best Friends (0.8)")) +
   theme(panel.grid = element_blank()) +
   labs(title = "Which birds are best friends? Which birds are enemies?",
        subtitle = "Based on what species of birds tend to appear / not appear together (Christmas-time 1950-2017, near Hamilton)",
