@@ -1,0 +1,96 @@
+---
+title: "Christmas Birds"
+author: "Alex Cookson"
+date: "14/09/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(viridis)
+
+theme_set(theme_light())
+
+bird_counts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-18/bird_counts.csv") %>%
+  rename(common_name = species,
+         latin_name = species_latin) %>%
+  separate(latin_name, into = c("genus", "species"), sep = " ", remove = FALSE)
+```
+
+What are the most common birds counted in 2017?
+
+```{r}
+bird_counts %>%
+  filter(year == max(year)) %>%
+  top_n(16, wt = how_many_counted_by_hour) %>%
+  mutate(common_name = fct_reorder(common_name, how_many_counted_by_hour)) %>%
+  ggplot(aes(common_name, how_many_counted_by_hour, fill = common_name)) +
+  geom_col() +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(title = "What were the most common species observed?",
+       subtitle = "2017 only",
+       x = "",
+       y = "Count per hour of observation")
+```
+
+What about the most common genera?
+
+```{r}
+bird_counts %>%
+  filter(year == max(year)) %>%
+  group_by(genus) %>%
+  summarise(genus_count = sum(how_many_counted),
+         genus_hours_watching = sum(total_hours),
+         genus_count_per_hour = sum(how_many_counted) / sum(total_hours)) %>%
+  ungroup() %>%
+  top_n(9, wt = genus_count_per_hour) %>%
+  inner_join(bird_counts %>% filter(year == max(year), how_many_counted != 0), by = "genus") %>%
+  mutate(common_name = fct_reorder(common_name, how_many_counted_by_hour)) %>%
+  ggplot(aes(common_name, how_many_counted_by_hour, fill = genus)) +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~ genus, scales = "free_y") +
+  theme(legend.position = "none") +
+  labs(title = "What were the most common genera?",
+       subtitle = "2017 only. Nine most common shown, with breakdown of individual species where applicable",
+       x = "",
+       y = "Count per hour of observation")
+```
+
+These 9 genera are the most common, and we have the breakdown of individual species within each genus. Except for ducks ("Anas"), there is very little diversity is species within a genus. Even among ducks, one specific species -- mallard -- dominates the count.
+
+
+### Appendix
+
+```{r}
+bird_counts %>%
+  filter(year == max(year)) %>%
+  group_by(genus) %>%
+  mutate(genus_count = sum(how_many_counted),
+         genus_hours_watching = sum(total_hours),
+         genus_count_per_hour = sum(how_many_counted) / sum(total_hours)) %>%
+  arrange(-how_many_counted_by_hour) %>%
+  distinct(genus, .keep_all = TRUE) %>%
+  ungroup() %>%
+  top_n(9, wt = genus_count_per_hour) %>%
+  mutate(genus_label = glue::glue("{genus} ({common_name})"),
+         genus_label = fct_reorder(genus_label, genus_count_per_hour)) %>%
+  ggplot(aes(genus_label, genus_count_per_hour, fill = genus_label)) +
+  geom_col() +
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(title = "What are the most common genera counted?",
+       subtitle = "2017 only. Examples of individual species are in parentheses after the genus",
+       x = "Genus",
+       y = "Count per hour of observation")
+```
+
+
