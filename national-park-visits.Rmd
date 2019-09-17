@@ -1,0 +1,54 @@
+---
+title: "National Park Visits"
+author: "Alex Cookson"
+date: "16/09/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+
+theme_set(theme_light())
+
+park_visits <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-17/national_parks.csv") %>%
+  rename(park_code = unit_code) %>%
+  filter(year != "Total") %>%
+  mutate(year = as.numeric(year),
+         region_long = fct_recode(region,
+                                  Alaska = "AK",
+                                  Midwest = "MW",
+                                  `Pacific West` = "PW",
+                                  Intermountain = "IM",
+                                  Northeast = "NE",
+                                  Southeast = "SE",
+                                  `National Capital` = "NC"
+                                  ),
+         parkname = ifelse(is.na(parkname), str_trim(str_remove(unit_name, unit_type)), parkname)) %>%
+  select(-number_of_records)
+
+
+state_pop <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-17/state_pop.csv")
+gas_price <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-17/gas_price.csv")
+```
+
+What are the different types of national parks?
+
+```{r}
+park_visits %>%
+  distinct(unit_type, parkname) %>%
+  count(unit_type) %>%
+  mutate(unit_type = fct_reorder(unit_type, n)) %>% View()
+  top_n(12, n) %>%
+  ggplot(aes(unit_type, n, fill = unit_type)) +
+  geom_col() +
+  coord_flip()
+```
+
+
