@@ -95,14 +95,17 @@ bird_counts %>%
   select(common_name_1, everything()) %>%
   gather(-common_name_1, key = "common_name_2", value = "correlation") %>%
   filter(common_name_1 != common_name_2) %>%
-  ggplot(aes(x = common_name_2, y = reorder(common_name_1, desc(common_name_1)), fill = correlation)) +
+  mutate(common_name_1 = fct_reorder(common_name_1, correlation, sum)) %>%
+  ggplot(aes(x = factor(common_name_2, levels = rev(levels(common_name_1))), y = common_name_1, fill = correlation)) +
   geom_tile() +
   scale_fill_gradient2(low = "#a50026", high = "#313695", mid = "#f5f5f5", breaks = c(-0.4, 0, 0.4, 0.8), labels = c("Enemies (-0.4)", "Neutral (0)", "Acquaintances (0.4)", "Best Friends (0.8)")) +
-  theme(panel.grid = element_blank()) +
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_text(hjust = 1, vjust = 1, angle = 45)) +
   labs(title = "Which birds are best friends? Which birds are enemies?",
-       subtitle = "Based on what species of birds tend to appear / not appear together (Christmas-time 1950-2017, near Hamilton)",
-       x = "Species",
-       y = "Species",
+       subtitle = "Based on what species of birds tend to be observed in the same year",
+       x = "",
+       y = "",
+       caption = "Source: @BirdsCanada (Christmas-time 1950-2017, near Hamilton)",
        fill = "Relationship Status")
 ```
 
