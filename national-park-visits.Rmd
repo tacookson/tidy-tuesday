@@ -38,17 +38,109 @@ state_pop <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/
 gas_price <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-17/gas_price.csv")
 ```
 
-What are the different types of national parks?
+What are the categories of sites, and which are the most prevalent?
 
 ```{r}
 park_visits %>%
+  filter(year == max(year)) %>%
   distinct(unit_type, parkname) %>%
   count(unit_type) %>%
-  mutate(unit_type = fct_reorder(unit_type, n)) %>% View()
+  mutate(unit_type = fct_reorder(unit_type, n)) %>%
   top_n(12, n) %>%
   ggplot(aes(unit_type, n, fill = unit_type)) +
   geom_col() +
-  coord_flip()
+  coord_flip() +
+  theme(legend.position = "none") +
+  labs(title = "Which categories have the most sites?",
+       subtitle = "As of 2016",
+       x = "",
+       y = "Number of sites")
 ```
+
+What has the general trend of visiting national sites been over time?
+
+```{r}
+state_pop %>%
+  group_by(year) %>%
+  summarise(total_population = sum(pop, na.rm = TRUE)) %>%
+  right_join(park_visits, by = "year") %>%
+  group_by(year) %>%
+  summarise(total_visitors = sum(visitors),
+            total_population = mean(total_population),
+            visits_per_thousand = total_visitors / (total_population / 1000)) %>%
+  filter(!is.na(total_population)) %>%
+  ggplot(aes(year, visits_per_thousand)) +
+  geom_hline(yintercept = 1000, lty = 2) +
+  geom_line(col = "dark green", size = 1.5) +
+  scale_x_continuous(breaks = seq(1900, 2010, 10)) +
+  scale_y_continuous(breaks = seq(0, 1200, 200)) +
+  labs(title = "How many people have been visiting national sites?",
+       subtitle = "1904-2015. Dashed line represents an equal number of visitors and population",
+       x = "",
+       y = "Visitors per Thousand US Population")
+```
+
+Wow! Visits in the early 20th century were low, with a notable dip during the United States's involvement in World War II. We see an increase in visits until a peak in the mid 1980s, which was followed by a steady decline to the present day.
+
+How does this time trend look when broken down by region?
+
+```{r}
+library(ggrepel)
+
+state_pop %>%
+  group_by(year) %>%
+  summarise(total_population = sum(pop, na.rm = TRUE)) %>%
+  right_join(park_visits, by = "year") %>%
+  group_by(year, region_long) %>%
+  summarise(total_visitors = sum(visitors),
+            total_population = mean(total_population),
+            visits_per_thousand = total_visitors / (total_population / 1000)) %>%
+  filter(!is.na(total_population)) %>%
+  ungroup() %>%
+  mutate(region_label = ifelse(year == max(year), as.character(region_long), NA_character_),
+         region_label = fct_reorder(region_label, visits_per_thousand, last, order_by = year)) %>%
+  ggplot(aes(year, visits_per_thousand, col = region_long)) +
+  geom_line() +
+  geom_label_repel(aes(label = region_label), nudge_x = 1, na.rm = TRUE) +
+  scale_x_continuous(breaks = seq(1900, 2010, 10)) +
+  labs(title = "How many people have been visiting national sites?",
+       subtitle = "1904-2015",
+       x = "",
+       y = "Visitors per Thousand US Population") +
+  theme(legend.position = "none")
+```
+
+When we break down by region, we see a few things:
+
+  * There seem to be three main clusters:
+    + Alaska, with the fewest visits
+    + Midwest and NT, with a middling amount of visits
+    + All other regions, with a high amount of visits
+  * Pacific West, National Capital, Northeast, and Southeast have an overall trend of peak visits in the mid-1980s
+  * Intermountain sites have a peak, but it is later than other regions, in the early 1990s
+
+What about individual parks?
+```{r}
+state_pop %>%
+  group_by(year) %>%
+  summarise(total_population = sum(pop, na.rm = TRUE)) %>%
+  right_join(park_visits, by = "year") %>%
+  group_by(year, parkname) %>%
+  summarise(total_visitors = sum(visitors),
+            total_population = mean(total_population),
+            visits_per_thousand = total_visitors / (total_population / 1000)) %>%
+  filter(!is.na(total_population)) %>%
+  ungroup() %>%
+  mutate(parkname_top = fct_lump(parkname, 10, w = visits_per_thousand)) %>%
+  ggplot(aes(year, visits_per_thousand, col = parkname_top, group = parkname)) + ### Need to figure out how to make the "Other" category gray
+  geom_line() +
+  scale_x_continuous(breaks = seq(1900, 2010, 10)) +
+  labs(title = "How many people have been visiting national sites?",
+       subtitle = "1904-2015",
+       x = "",
+       y = "Visitors per Thousand US Population") +
+  theme(legend.position = "none")
+```
+
 
 
