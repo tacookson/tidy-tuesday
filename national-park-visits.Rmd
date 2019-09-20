@@ -14,6 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(lubridate)
+library(ggrepel)
+library(ggsci)
+library(viridis)
 
 theme_set(theme_light())
 
@@ -50,6 +53,7 @@ park_visits %>%
   ggplot(aes(unit_type, n, fill = unit_type)) +
   geom_col() +
   coord_flip() +
+  scale_fill_viridis(discrete = TRUE, direction = -1) +
   theme(legend.position = "none") +
   labs(title = "Which categories have the most sites?",
        subtitle = "As of 2016",
@@ -60,6 +64,8 @@ park_visits %>%
 What has the general trend of visiting national sites been over time?
 
 ```{r}
+# I accidentally saw 538's graph of visits over time and decided to replicate it
+
 state_pop %>%
   group_by(year) %>%
   summarise(total_population = sum(pop, na.rm = TRUE)) %>%
@@ -86,41 +92,6 @@ Wow! Visits in the early 20th century were low, with a notable dip during the Un
 How does this time trend look when broken down by region?
 
 ```{r}
-library(ggrepel)
-
-state_pop %>%
-  group_by(year) %>%
-  summarise(total_population = sum(pop, na.rm = TRUE)) %>%
-  right_join(park_visits, by = "year") %>%
-  group_by(year, region_long) %>%
-  summarise(total_visitors = sum(visitors),
-            total_population = mean(total_population),
-            visits_per_thousand = total_visitors / (total_population / 1000)) %>%
-  filter(!is.na(total_population)) %>%
-  ungroup() %>%
-  mutate(region_label = ifelse(year == max(year), as.character(region_long), NA_character_),
-         region_label = fct_reorder(region_label, visits_per_thousand, last, order_by = year)) %>%
-  ggplot(aes(year, visits_per_thousand, col = region_long)) +
-  geom_line() +
-  geom_label_repel(aes(label = region_label), nudge_x = 1, na.rm = TRUE) +
-  scale_x_continuous(breaks = seq(1900, 2010, 10)) +
-  labs(title = "How many people have been visiting national sites?",
-       subtitle = "1904-2015",
-       x = "",
-       y = "Visitors per Thousand US Population") +
-  theme(legend.position = "none")
-```
-
-When we break down by region, we see a few things:
-
-  * There seem to be three main clusters:
-    + Alaska, with the fewest visits
-    + Midwest and NT, with a middling amount of visits
-    + All other regions, with a high amount of visits
-  * Pacific West, National Capital, Northeast, and Southeast have an overall trend of peak visits in the mid-1980s
-  * Intermountain sites have a peak, but it is later than other regions, in the early 1990s
-
-```{r}
 state_pop %>%
   group_by(year) %>%
   summarise(total_population = sum(pop, na.rm = TRUE)) %>%
@@ -140,7 +111,7 @@ state_pop %>%
   ggplot(aes(year, visits_per_thousand_aggregated, col = region_long)) +
   geom_line() +
   geom_label_repel(aes(label = region_label), nudge_x = 1, na.rm = TRUE) +
-  ggsci::scale_color_jco() +
+  scale_color_jco() +
   scale_x_continuous(breaks = seq(1900, 2010, 10)) +
   expand_limits(x = 2025) +
   labs(title = "What are the most popular national sites by region?",
@@ -150,6 +121,16 @@ state_pop %>%
   theme(legend.position = "none",
         panel.grid.minor = element_blank())
 ```
+
+When we break down by region, we see a few things:
+
+  * There seem to be three main clusters:
+    + Alaska, with the fewest visits
+    + Midwest and NT, with a middling amount of visits
+    + All other regions, with a high amount of visits
+  * Pacific West, National Capital, Northeast, and Southeast have an overall trend of peak visits in the mid-1980s
+  * Intermountain sites have a peak, but it is later than other regions, in the early 1990s
+
 
 What about individual parks?
 ```{r}
@@ -177,19 +158,6 @@ state_pop %>%
 ```
 
 I'm not sure how useful this graph is. It's awfully busy and, even though I've tried to minimise their visual weight, the gray lines of less-popular parks are distracting.
-
-```{r}
-park_visits %>%
-  filter(year >= 1980) %>%
-  group_by(park_code) %>%
-  arrange(year) %>%
-  mutate(min_year = min(year),
-         visitors_indexed_to_1980 = visitors / first(visitors, order_by = year)) %>%
-  ungroup() %>%
-  filter(min_year <= 1980) %>%
-  ggplot(aes(year, visitors_indexed_to_1980, group = park_code)) +
-  geom_line()
-```
 
 
 
