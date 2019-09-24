@@ -1,0 +1,118 @@
+---
+title: "School Diversity"
+author: "Alex Cookson"
+date: "23/09/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(scales)
+library(viridis)
+
+theme_set(theme_light())
+```
+
+```{r}
+school_diversity <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-24/school_diversity.csv") %>%
+  clean_names() %>%
+  rename(district_id = leaid,
+         district_name = lea_name,
+         state = st,
+         locale = d_locale_txt,
+         native = aian,
+         students = total,
+         diversity_rating = diverse,
+         variance_ratio = variance,
+         integration_level = int_group) %>%
+  separate(locale, into = c("locale_urbanity", "locale_size"), sep = "-", remove = FALSE) %>%
+  mutate(school_year = parse_number(school_year),
+         native = native / 100,
+         asian = asian / 100,
+         black = black / 100,
+         hispanic = hispanic / 100,
+         white = white / 100,
+         multi = multi / 100)
+```
+
+How does diversity differ by state, and how has it changed over time?
+
+```{r}
+school_diversity %>%
+  add_count(district_id) %>%
+  filter(n > 1) %>%
+  group_by(school_year, state) %>%
+  summarise_at(vars(native:multi), funs(weighted.mean(., w = students))) %>%
+  group_by(school_year) %>%
+  mutate(state = fct_reorder(state, white)) %>%
+  ungroup() %>%
+  mutate(nonwhite = 1 - white) %>%
+  group_by(state) %>%
+  arrange(school_year) %>%
+  mutate(nonwhite_change = last(nonwhite) - first(nonwhite)) %>%
+  ungroup() %>%
+  mutate(nonwhite_change_category = case_when(nonwhite_change == min(nonwhite_change) ~ "change towards white",
+                                              nonwhite_change == max(nonwhite_change) ~ "change towards non-white",
+                                              TRUE ~ "in the middle"),
+         state_label = case_when(nonwhite_change_category == "change towards white" & school_year == 2016 ~ as.character(state),
+                                 nonwhite_change_category == "change towards non-white" & school_year == 2016 ~ as.character(state),
+                                 TRUE ~ NA_character_)) %>%
+  arrange(nonwhite_change) %>%
+  ggplot(aes(factor(school_year), nonwhite, group = state, col = nonwhite_change_category)) +
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  ggrepel::geom_text_repel(aes(label = state_label), nudge_x = 0.08) +
+  scale_y_continuous(labels = percent_format()) +
+  scale_colour_manual(values = c("#02075d", "#990000", "#aaaaaa")) +
+  ggthemes::theme_fivethirtyeight() +
+  theme(legend.position = "none") +
+  labs(title = "Which states* have seen the biggest change in their classrooms?",
+       subtitle = "% of non-white students",
+       caption = "Okay, D.C. isn't a state, but it's close enough!",
+       x = "",
+       y = "")
+```
+
+Are levels of diversity different for different levels of urban-ness?
+
+```{r}
+school_diversity %>%
+  count(diversity_rating, locale_urbanity) %>%
+  mutate(locale_urbanity = fct_relevel(locale_urbanity, c("city", "suburban", "town", "rural")),
+         diversity_rating = fct_relevel(diversity_rating, c("Extremely undiverse", "Undiverse", "Diverse"))) %>%
+  ggplot(aes(locale_urbanity, n, fill = diversity_rating)) +
+  geom_col(position = "fill")
+```
+
+How are the proportions of different ethnicities correlated? (e.g., if a district has more native students, does it also have more student of other ethnicities?)
+
+```{r}
+school_diversity %>%
+  filter(school_year == 2016) %>%
+  group_by(state) %>%
+  summarise_at(vars(native:multi), funs(weighted.mean(., w = students))) %>%
+  select(-state) %>%
+  cor() %>%
+  corrplot::corrplot()
+```
+
+What do the diversity ratings look like?
+
+```{r}
+school_diversity %>%
+  group_by(diversity_rating) %>%
+  summarise_at(vars(native:multi), funs(weighted.mean(., w = students, na.rm = TRUE))) %>%
+  gather(native:multi, key = "ethnicity", value = "proportion") %>%
+  ggplot(aes(diversity_rating, proportion, fill = ethnicity)) +
+  geom_col()
+```
+
+
+
