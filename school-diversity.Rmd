@@ -16,6 +16,8 @@ library(tidyverse)
 library(janitor)
 library(scales)
 library(viridis)
+library(ggthemes)
+library(drlib)
 
 theme_set(theme_light())
 ```
@@ -71,7 +73,7 @@ school_diversity %>%
   ggrepel::geom_text_repel(aes(label = state_label), nudge_x = 0.08) +
   scale_y_continuous(labels = percent_format()) +
   scale_colour_manual(values = c("#02075d", "#990000", "#aaaaaa")) +
-  ggthemes::theme_fivethirtyeight() +
+  theme_fivethirtyeight() +
   theme(legend.position = "none") +
   labs(title = "Which states* have seen the biggest change in their classrooms?",
        subtitle = "% of non-white students",
@@ -79,6 +81,35 @@ school_diversity %>%
        x = "",
        y = "")
 ```
+
+How has the specific composition of DC and Nevada changed?
+
+```{r}
+school_diversity %>%
+  add_count(district_id) %>%
+  filter(n > 1,
+         state %in% c("DC", "NV")) %>%
+  mutate(state = ifelse(state == "DC", "Washington, D.C.", "Nevada")) %>%
+  group_by(school_year, state) %>%
+  summarise_at(vars(native:multi), funs(weighted.mean(., w = students))) %>%
+  gather(key = "ethnicity", value = "proportion", -school_year, -state) %>%
+  filter(ethnicity != "multi") %>%
+  mutate(ethnicity = str_to_title(ethnicity),
+         ethnicity = reorder_within(ethnicity, proportion, state)) %>%
+  ggplot(aes(proportion, ethnicity, col = factor(school_year))) +
+  geom_point(size = 6, alpha = .75) +
+  facet_wrap(~ state, nrow = 2, scales = "free_y") +
+  scale_x_continuous(labels = percent_format()) +
+  scale_y_reordered() +
+  scale_colour_manual(values = c("#2da1d9", "#002366")) +
+  theme_fivethirtyeight() +
+  theme(legend.position = "bottom") +
+  labs(title = "How do D.C. and Nevada compare?",
+       subtitle = "% of a given ethnicity in schools",
+       col = "School Year")
+```
+
+### Rough Graphs
 
 Are levels of diversity different for different levels of urban-ness?
 
@@ -113,6 +144,7 @@ school_diversity %>%
   ggplot(aes(diversity_rating, proportion, fill = ethnicity)) +
   geom_col()
 ```
+
 
 
 
