@@ -1,0 +1,78 @@
+---
+title: "All the Pizza!"
+author: "Alex Cookson"
+date: "30/09/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+
+theme_set(theme_light())
+
+pizza_jared <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-01/pizza_jared.csv")
+
+pizza_barstool <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-01/pizza_barstool.csv") %>%
+  mutate(pizzeria_id = row_number()) %>%
+  rename(address = address1,
+         provider_reviews = provider_review_count,
+         all_rating = review_stats_all_average_score,
+         all_reviews = review_stats_all_count,
+         community_rating = review_stats_community_average_score,
+         community_reviews = review_stats_community_count,
+         critic_rating = review_stats_critic_average_score,
+         critic_reviews = review_stats_critic_count,
+         dave_rating = review_stats_dave_average_score,
+         dave_reviews = review_stats_dave_count) %>%
+  select(pizzeria_id, everything(), -review_stats_all_total_score, -review_stats_community_total_score, -review_stats_critic_total_score, -review_stats_dave_total_score) %>%
+  gather("category", "value", provider_rating:dave_reviews) %>%
+  separate(category, into = c("reviewer", "measure"), sep = "_") %>%
+  spread(measure, value) %>%
+  filter(reviews > 0) %>%
+  mutate(rating = if_else(reviewer == "provider", rating * 2, rating))
+
+pizza_datafiniti <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-01/pizza_datafiniti.csv")
+```
+
+What are the best and worst pizza places in New York?
+
+```{r}
+new_york_pizza <- pizza_barstool %>%
+  filter(city %in% c("New York", "New York City", "Brooklyn", "Bronx", "Staten Island", "Hoboken"),
+         reviewer != "all") %>%
+  mutate(overall_median_rating = median(rating)) %>%
+  group_by(pizzeria_id, name, overall_median_rating) %>%
+  summarise(avg_rating = weighted.mean(rating, reviews)) %>%
+  ungroup() %>%
+  mutate(diff_from_median = avg_rating - overall_median_rating)
+
+new_york_top <- new_york_pizza %>%
+  top_n(10, wt = diff_from_median)
+
+new_york_bottom <- new_york_pizza %>%
+  top_n(-10, wt = diff_from_median)
+
+new_york_extremes <- bind_rows(new_york_top, new_york_bottom)
+
+rm(new_york_top, new_york_bottom)
+
+new_york_extremes %>%
+  mutate(name = fct_reorder(name, diff_from_median)) %>%
+  ggplot(aes(name, diff_from_median, fill = factor(sign(diff_from_median)))) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_manual(values = c("#d53e4f", "#3288bd")) +
+  theme(legend.position = "none",
+        panel.grid.minor = element_blank()) +
+  labs(title = "What are the best and worst pizza places in New York?",
+       subtitle = "Based on Barstool, community, critic, and Dave reviews",
+       x = "",
+       y = "Score difference from the median")
+```
+
