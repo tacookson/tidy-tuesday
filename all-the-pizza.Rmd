@@ -47,16 +47,18 @@ new_york_pizza <- pizza_barstool %>%
   filter(city %in% c("New York", "New York City", "Brooklyn", "Bronx", "Staten Island", "Hoboken"),
          reviewer != "all") %>%
   mutate(overall_median_rating = median(rating)) %>%
-  group_by(pizzeria_id, name, overall_median_rating) %>%
+  group_by(pizzeria_id, name, overall_median_rating, price_level) %>%
   summarise(avg_rating = weighted.mean(rating, reviews)) %>%
   ungroup() %>%
   mutate(diff_from_median = avg_rating - overall_median_rating)
 
 new_york_top <- new_york_pizza %>%
-  top_n(10, wt = diff_from_median)
+  group_by(price_level) %>%
+  top_n(5, wt = diff_from_median)
 
 new_york_bottom <- new_york_pizza %>%
-  top_n(-10, wt = diff_from_median)
+  group_by(price_level) %>%
+  top_n(-5, wt = diff_from_median)
 
 new_york_extremes <- bind_rows(new_york_top, new_york_bottom)
 
@@ -67,6 +69,7 @@ new_york_extremes %>%
   ggplot(aes(name, diff_from_median, fill = factor(sign(diff_from_median)))) +
   geom_col() +
   coord_flip() +
+  facet_wrap(~ price_level, scales = "free_y") +
   scale_fill_manual(values = c("#d53e4f", "#3288bd")) +
   theme(legend.position = "none",
         panel.grid.minor = element_blank()) +
