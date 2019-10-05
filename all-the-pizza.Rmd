@@ -60,21 +60,32 @@ new_york_bottom <- new_york_pizza %>%
   group_by(price_level) %>%
   top_n(-5, wt = diff_from_median)
 
-new_york_extremes <- bind_rows(new_york_top, new_york_bottom)
+new_york_extremes <- bind_rows(new_york_top, new_york_bottom) %>%
+  ungroup()
 
 rm(new_york_top, new_york_bottom)
 
+library(drlib)
+
 new_york_extremes %>%
-  mutate(name = fct_reorder(name, diff_from_median)) %>%
+  mutate(price_level = case_when(price_level == 0 ~ "$",
+                                 price_level == 1 ~ "$$",
+                                 price_level == 2 ~ "$$$",
+                                 price_level == 3 ~ "$$$$",
+                                 TRUE ~ NA_character_),
+         name = reorder_within(name, diff_from_median, price_level)) %>%
   ggplot(aes(name, diff_from_median, fill = factor(sign(diff_from_median)))) +
   geom_col() +
   coord_flip() +
   facet_wrap(~ price_level, scales = "free_y") +
+  scale_x_reordered() +
   scale_fill_manual(values = c("#d53e4f", "#3288bd")) +
   theme(legend.position = "none",
-        panel.grid.minor = element_blank()) +
-  labs(title = "What are the best and worst pizza places in New York?",
-       subtitle = "Based on Barstool, community, critic, and Dave reviews",
+        panel.grid.minor = element_blank(),
+        strip.background = element_rect(fill = NA),
+        strip.text = element_text(colour = "black", face = "bold", size = 12)) +
+  labs(title = "What's the best and worst pizza in New York?",
+       subtitle = "Based on Barstool, community, critic, and Dave reviews. Broken down by price level.",
        x = "",
        y = "Score difference from the median")
 ```
