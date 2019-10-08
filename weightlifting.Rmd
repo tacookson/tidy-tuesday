@@ -1,0 +1,62 @@
+---
+title: "IPF Weighlifting"
+author: "Alex Cookson"
+date: "07/10/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Preliminary questions
+
+* What is a typical winning lift weight for each event?
+* Does that weight change over time?
+* What impact does age have on lift weight?
+* What impact does body weight have on lift weight?
+* What impact does sex have on lift weight?
+* How have individual weightlifters progressed over their careers? (related: is there peak age?)
+* Who are the youngest and oldest weightlifters?
+* Is there anything unusual among weightlifters who were disqualified for doping?
+* Can we create a simple predictor of how an individual weightlifter will place, given their history?
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(broom)
+
+ipf_lifts <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-08/ipf_lifts.csv") %>%
+  mutate(event_long = case_when(event == "SBD" ~ "Full Power",
+                                event == "BD" ~ "Ironman / Push-Pull",
+                                event == "SD" ~ "Squat-Deadlift",
+                                event == "SB" ~ "Squat-Bench",
+                                event == "S" ~ "Squat",
+                                event == "B" ~ "Bench",
+                                event == "D" ~ "Deadlift"))
+```
+
+```{r}
+ipf_lifts %>%
+  filter(best3bench_kg > 0) %>%
+  ggplot(aes(bodyweight_kg, best3bench_kg)) +
+  geom_point(alpha = .3) +
+  geom_smooth(method = "lm")
+```
+
+Preliminary linear models
+
+```{r}
+ipf_lifts %>%
+  filter(best3bench_kg > 0,
+         !is.na(bodyweight_kg)) %>%
+  lm(best3bench_kg ~ bodyweight_kg, data = .) %>%
+  augment() %>%
+  ggplot(aes(bodyweight_kg, .resid)) +
+  geom_point(alpha = .3)
+  
+```
+
+
