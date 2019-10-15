@@ -69,7 +69,7 @@ prolific_lifters %>%
          equipment = fct_reorder(equipment, best_lift_kg, max)) %>%
   filter(sex == "F") %>%
   ggplot(aes(age, best_lift_kg, col = equipment, shape = equipment)) +
-  geom_point(size = 3) +
+  geom_point(size = 2.5, alpha = .8) +
   facet_wrap(~ category) +
   scale_y_continuous(breaks = seq(100, 275, 25), limits = c(100, 275)) +
   scale_colour_manual(values = c("#b2182b", "#2166ac")) +
@@ -91,7 +91,7 @@ prolific_lifters %>%
          equipment = fct_reorder(equipment, best_lift_kg, max)) %>%
   filter(sex == "M") %>%
   ggplot(aes(age, best_lift_kg, col = equipment, shape = equipment)) +
-  geom_point(size = 3) +
+  geom_point(size = 2.5, alpha = .8) +
   facet_wrap(~ category) +
   scale_y_continuous(breaks = seq(100, 275, 25), limits = c(100, 275)) +
   scale_colour_manual(values = c("#b2182b", "#2166ac")) +
@@ -103,12 +103,9 @@ prolific_lifters %>%
        y = "Best Lift (kg)",
        col = "Equipment",
        shape = "Equipment")
-```
 
-```{r}
 
 ```
-
 
 Preliminary linear models
 
