@@ -1,0 +1,28 @@
+---
+title: "Car Fuel Economy"
+author: "Alex Cookson"
+date: "14/10/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+
+epa_cars <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-15/big_epa_cars.csv") %>%
+  select(-barrelsA08, -charge120, -fuelType2:-c240bDscr, -startStop) %>%
+  janitor::clean_names()
+```
+
+```{r}
+epa_cars %>% count(fuel_type, sort = TRUE)
+  ggplot(aes(charge120)) +
+  geom_histogram()
+```
+
+
