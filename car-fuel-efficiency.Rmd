@@ -15,14 +15,12 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 
 epa_cars <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-15/big_epa_cars.csv") %>%
-  select(-barrelsA08, -charge120, -fuelType2:-c240bDscr, -startStop) %>%
+  mutate_all(~ ifelse(. == -1, NA, .)) %>%
   janitor::clean_names()
 ```
 
 ```{r}
-epa_cars %>% count(fuel_type, sort = TRUE)
-  ggplot(aes(charge120)) +
-  geom_histogram()
+epa_cars %>% count(fe_score, sort = TRUE)
 ```
 
 
