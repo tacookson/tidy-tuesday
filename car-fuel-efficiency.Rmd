@@ -13,6 +13,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
+library(viridis)
+
+theme_set(theme_light())
 
 epa_cars <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-15/big_epa_cars.csv") %>%
   mutate_all(~ ifelse(. == -1, NA, .)) %>%
@@ -20,7 +23,47 @@ epa_cars <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/t
 ```
 
 ```{r}
-epa_cars %>% count(fe_score, sort = TRUE)
+epa_cars <- epa_cars %>%
+  select(id, make, model, year, everything())
+
+epa_cars %>%
+  filter(year == 2019) %>%
+  mutate(make = fct_lump(make, 20)) %>%
+  count(make) %>%
+  mutate(make = fct_reorder(make, n),
+         make = fct_relevel(make, "Other")) %>%
+  ggplot(aes(make, n, fill = make)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_viridis(discrete = TRUE, direction = -1) +
+  theme(legend.position = "none")
 ```
+
+```{r}
+epa_cars %>%
+  group_by(year, make) %>%
+  summarise(mean_mpg = mean(comb08),
+            median_mpg = median(comb08),
+            sd_mpg = sd(comb08),
+            mean_savings = mean(you_save_spend),
+            n = n()) %>% View()
+  ggplot(aes(year, mean_mpg)) +
+  geom_point(alpha = 0.5)
+```
+
+Money (and fuel efficiency) is no concern of mine!
+
+```{r}
+epa_cars %>%
+  filter(you_save_spend < -10000) %>%
+  group_by(year, make, model) %>%
+  summarise(mpg = mean(comb08),
+            savings = mean(you_save_spend)) %>%
+  ungroup() %>%
+  ggplot(aes(mpg, savings)) +
+  geom_point()
+```
+
+
 
 
