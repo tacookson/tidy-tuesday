@@ -1,0 +1,105 @@
+---
+title: "Horror Movies"
+author: "Alex Cookson"
+date: "21/10/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+
+theme_set(theme_light())
+
+horror_movies <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-22/horror_movies.csv") %>%
+  mutate(id = row_number(),
+         release_year = parse_number(str_extract(title, "\\([0-9]{4}\\)")),
+         runtime_min = parse_number(movie_run_time)) %>%
+  select(-release_date, -movie_run_time)
+```
+
+```{r}
+horror_movies %>%
+  select(plot) %>%
+  mutate(director = str_extract(plot, "(?<=Directed by )(.*)(?=\\. With)")) %>%
+  View()
+```
+
+```{r}
+by_tag <- horror_movies %>%
+  mutate(title = str_remove(title, " \\([0-9]{4}\\)"),
+         genre = str_split(genres, "\\| ")) %>%
+  unnest(genre) %>%
+  mutate(cast = str_split(cast, "\\|")) %>%
+  unnest(cast) %>%
+  mutate(language = str_split(language, "\\|")) %>%
+  unnest(language) %>%
+  select(id, title, release_country, genre, cast, language, review_rating) %>%
+  gather(release_country:language, key = "tag", value = "value") %>%
+  distinct(title, tag, value, .keep_all = TRUE) %>%
+  mutate(tag = ifelse(tag == "release_country", "release country", tag),
+         value = paste0(value, " (", str_to_title(tag), ")"))
+```
+
+Lasso regression on tags (genre, language, cast)
+
+```{r}
+library(glmnet)
+library(tidytext)
+
+by_tag_filtered <- by_tag %>%
+  filter(!is.na(review_rating))
+
+tag_matrix <- by_tag_filtered %>%
+  select(id, value) %>%
+  cast_sparse(id, value)
+
+ids <- as.integer(rownames(tag_matrix))
+ratings <- horror_movies$review_rating[ids]
+
+cv_lasso_model <- cv.glmnet(tag_matrix, ratings)
+
+cv_lasso_model$glmnet.fit %>%
+  tidy() %>%
+  filter(lambda == cv_lasso_model$lambda.1se,
+         term != "(Intercept)") %>%
+  group_by(direction = ifelse(estimate > 0, "Positive", "Negative")) %>%
+  top_n(12, abs(estimate)) %>%
+  ungroup() %>%
+  mutate(term = fct_reorder(term, estimate)) %>%
+  ggplot(aes(term, estimate, fill = direction)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_manual(values = c("#b2182b", "#053061")) +
+  theme(legend.position = "none") +
+  labs(title = "How do cast, language, and release country affect rating?",
+       subtitle = "Lasso fit model of ratings for 3,058 horror movies",
+       x = "",
+       y = "Effect on Estimated Rating (starting with a base of 5.25)")
+```
+
+```{r}
+lexicon <- cv_lasso_model$glmnet.fit %>%
+  tidy() %>%
+  filter(lambda == cv_lasso_model$lambda.1se,
+         term != "(Intercept)") %>%
+  select(term, estimate)
+
+by_tag %>%
+  filter(!is.na(review_rating)) %>%
+  distinct(id) %>%
+  sample_n(size = 1) %>%
+  inner_join(by_tag, by = "id") %>%
+  inner_join(lexicon, by = c("value"= "term")) %>%
+  select(id, title, value, estimate, review_rating) %>%
+  mutate(estimated_rating = 5.25 + sum(estimate))
+```
+
+
+
