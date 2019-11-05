@@ -1,0 +1,40 @@
+---
+title: "walking-biking-cities"
+author: "Alex Cookson"
+date: "04/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load libraries and data
+
+```{r}
+library(tidyverse)
+
+commute_mode <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-11-05/commute.csv") %>%
+  mutate(state = case_when(state == "Ca" ~ "California",
+                           state == "Massachusett" ~ "Massachusetts",
+                           TRUE ~ state),
+         state_abb = case_when(state == "California" ~ "CA",
+                               state == "Massachusetts" ~ "MA",
+                               state == "District of Columbia" ~ "DC",
+                               TRUE ~ state_abb),
+         state_region = case_when(state_abb == "CA" ~ "West",
+                                  state_abb == "MA" ~ "Northeast",
+                                  state_abb == "DC" ~ "South",
+                                  TRUE ~ state_region)) %>%
+  separate(city,
+           into = c("city_name", "city_descriptor"),
+           sep = " (?=city|village|town|borough|municipality|urban)",
+           extra = "merge")
+```
+
+EDA
+
+```{r}
+commute_mode %>%
+  count(city_descriptor, sort = TRUE)
+```
