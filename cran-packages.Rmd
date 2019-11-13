@@ -1,0 +1,26 @@
+---
+title: "cran-packages"
+author: "Alex Cookson"
+date: "13/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+
+cran_code <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-11-12/loc_cran_packages.csv") %>%
+  rename(file_count = file,
+         blank_lines = blank,
+         comment_lines = comment,
+         code_lines = code)
+```
+
+```{r}
+cran_code %>%
+  View()
+```
+
