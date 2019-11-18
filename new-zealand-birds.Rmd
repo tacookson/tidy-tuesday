@@ -1,0 +1,50 @@
+---
+title: "new-zealand-birds"
+author: "Alex Cookson"
+date: "18/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(scales)
+
+theme_set(theme_light())
+
+ordinals <- c("first", "second", "third", "fourth", "fifth")
+
+nz_bird <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-11-19/nz_bird.csv") %>%
+  mutate(vote_rank = parse_number(vote_rank),
+         datetime = as_datetime(date) + hours(hour),
+         vote_id = (row_number() + -1) %/% 5,
+         vote_id = vote_id + 1) %>%
+  select(vote_id, vote_rank, bird_breed, datetime)
+```
+
+Who are the people who would not compromise? NO SECOND CHOICE
+
+```{r}
+nz_bird %>%
+  filter(!is.na(bird_breed)) %>%
+  group_by(vote_id) %>%
+  filter(max(vote_rank) == 1) %>%
+  ungroup() %>%
+  count(bird_breed, sort = TRUE) %>%
+  mutate(bird_breed = fct_reorder(bird_breed, n),
+         pct = n / sum(n)) %>%
+  top_n(12, wt = n) %>%
+  ggplot(aes(bird_breed, pct)) +
+  geom_col() +
+  coord_flip() +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  labs(title = "Yellow-eyed penguins have the most *uncompromising* fans",
+       subtitle = "Votes for bird of the year among voters who only had a first choice (n = 2,270)",
+       x = "",
+       y = "% of Vote Share (among first-choicers)")
+```
+
