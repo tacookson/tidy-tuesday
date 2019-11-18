@@ -21,6 +21,11 @@ cran_code <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/
 
 ```{r}
 cran_code %>%
-  View()
+  group_by(pkg_name, version) %>%
+  summarise_at(vars(-language), sum) %>%
+  mutate(total_lines = blank_lines + comment_lines + code_lines,
+         pct_comment = comment_lines / total_lines) %>%
+  ggplot(aes(pct_comment)) +
+  geom_histogram()
 ```
 
