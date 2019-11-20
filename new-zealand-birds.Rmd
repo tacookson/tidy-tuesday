@@ -13,10 +13,11 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(lubridate)
 library(scales)
+library(viridis)
 
 theme_set(theme_light())
 
-ordinals <- c("first", "second", "third", "fourth", "fifth")
+former_winners <- c("")
 
 nz_bird <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-11-19/nz_bird.csv") %>%
   mutate(vote_rank = parse_number(vote_rank),
@@ -37,14 +38,25 @@ nz_bird %>%
   count(bird_breed, sort = TRUE) %>%
   mutate(bird_breed = fct_reorder(bird_breed, n),
          pct = n / sum(n)) %>%
-  top_n(12, wt = n) %>%
-  ggplot(aes(bird_breed, pct)) +
+  top_n(8, wt = n) %>%
+  ggplot(aes(bird_breed, pct, fill = bird_breed)) +
   geom_col() +
   coord_flip() +
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
-  labs(title = "Yellow-eyed penguins have the most *uncompromising* fans",
+  scale_fill_viridis(discrete = TRUE) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank(),
+        plot.title = element_text(size = 18),
+        plot.subtitle = element_text(size = 12),
+        axis.text = element_text(size = 12),
+        legend.position = "none") +
+  labs(title = "Yellow-eyed penguins have the most uncompromising fans",
        subtitle = "Votes for bird of the year among voters who only had a first choice (n = 2,270)",
        x = "",
        y = "% of Vote Share (among first-choicers)")
+```
+
+```{r}
+ggsave("new-zealand-boty.png", device = "png", dpi = "retina")
 ```
 
