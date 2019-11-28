@@ -1,0 +1,23 @@
+---
+title: "student-loans"
+author: "Alex Cookson"
+date: "27/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+
+loans <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-11-26/loans.csv") %>%
+  mutate(year = year + 2000)
+```
+
+```{r}
+
+```
+
+
