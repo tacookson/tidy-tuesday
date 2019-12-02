@@ -1,0 +1,30 @@
+---
+title: "Philly Parking Tickets"
+author: "Alex Cookson"
+date: "02/12/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+
+theme_set(theme_light())
+
+tickets <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-12-03/tickets.csv")
+```
+
+EDA
+
+```{r}
+tickets %>%
+  group_by(violation_desc) %>%
+  summarise(mean_fine = mean(fine),
+            n = n()) %>%
+  View()
+```
+
+
