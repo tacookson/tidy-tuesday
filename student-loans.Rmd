@@ -11,13 +11,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
+library(lubridate)
+library(scales)
 
 loans <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-11-26/loans.csv") %>%
-  mutate(year = year + 2000)
+  mutate(year = year + 2000,
+         quarter_ending = make_date(year, quarter * 3),
+         quarter_ending = quarter_ending + days(days_in_month(quarter_ending) - 1))
 ```
 
 ```{r}
-
+loans %>%
+  group_by(agency_name, quarter_ending) %>%
+  summarise_at(vars(starting:wage_garnishments), sum, na.rm = TRUE) %>%
+  ungroup() %>%
+  ggplot(aes(quarter_ending, wage_garnishments, group = agency_name)) +
+  geom_line() +
+  scale_y_continuous(labels = dollar_format())
 ```
 
 
