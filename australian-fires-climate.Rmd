@@ -1,0 +1,40 @@
+---
+title: "Australian Climate and Fires"
+author: "Alex Cookson"
+date: "11/01/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load libraries
+
+```{r}
+library(tidyverse)
+
+theme_set(theme_light())
+```
+
+Load data
+
+```{r}
+rainfall <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/rainfall.csv') %>%
+  rename(rainfall_mm = rainfall,
+         period_days = period,
+         quality_certified = quality) %>%
+  mutate(quality_certified = quality_certified == "Y")
+
+temperature <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/temperature.csv') %>%
+  mutate_at(vars(city_name, site_name), str_to_title)
+```
+
+EDA
+
+```{r}
+rainfall %>%
+  count(quality)
+```
+
+
