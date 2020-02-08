@@ -13,6 +13,7 @@ Load libraries
 
 ```{r}
 library(tidyverse)
+library(lubridate)
 
 theme_set(theme_light())
 ```
@@ -24,7 +25,8 @@ rainfall <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
   rename(rainfall_mm = rainfall,
          period_days = period,
          quality_certified = quality) %>%
-  mutate(quality_certified = quality_certified == "Y")
+  mutate(quality_certified = quality_certified == "Y",
+         date = make_date(year, month, day))
 
 temperature <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-07/temperature.csv') %>%
   mutate_at(vars(city_name, site_name), str_to_title)
@@ -34,7 +36,17 @@ EDA
 
 ```{r}
 rainfall %>%
-  count(quality)
+  filter(city_name == "Sydney",
+         year >= 1859) %>%
+  mutate(month_name = month(date, label = TRUE)) %>%
+  group_by(year, month) %>%
+  summarise(mean_rainfall = mean(rainfall_mm)) %>%
+  ungroup() %>%
+  ggplot(aes(year, mean_rainfall)) +
+  geom_point() +
+  facet_wrap(~ month)
+
+temperature
 ```
 
 
