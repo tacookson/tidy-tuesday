@@ -1,0 +1,25 @@
+---
+title: "measles"
+author: "Alex Cookson"
+date: "26/02/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Import data
+
+```{r}
+library(tidyverse)
+
+measles_raw <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-25/measles.csv')
+```
+
+```{r}
+measles <- measles_raw %>%
+  mutate(overall = ifelse(overall == -1, NA, overall)) %>%
+  mutate_at(vars(mmr, overall, xmed, xper), ~ . / 100)
+```
+
