@@ -2,8 +2,10 @@
 title: "National Park Visits"
 author: "Alex Cookson"
 date: "16/09/2019"
-output: html_document
-editor_options: 
+output:
+  pdf_document: default
+  html_document: default
+editor_options:
   chunk_output_type: console
 ---
 
