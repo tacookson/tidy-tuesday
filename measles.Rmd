@@ -1,28 +1,73 @@
 ---
-title: "measles"
+title: "measles-lincoln-elementary"
 author: "Alex Cookson"
-date: "26/02/2020"
+date: "28/02/2020"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+We are going to use some additional packages:
 
-Import data
+- scales to convert numbers into pretty number (e.g., 40000 --> 40,000 or 0.47 --> 47%)
+- glue to write titles and captions that will dynamically update stuff with R code
+
+Setup
 
 ```{r}
 library(tidyverse)
+library(scales)
+library(glue)
 
-measles_raw <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-25/measles.csv')
+theme_set(theme_light())
+
+measles <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-25/measles.csv')
 ```
 
-Cleaning steps:
 
-1. Convert -1 in `overall` to NA (assuming this means a missing value)
-2. Convert percentages from whole numbers to decimals
+De-duplication
+
 ```{r}
-measles <- measles_raw %>%
-  mutate_at(vars(mmr, overall, xmed, xper), ~ ifelse(. == -1, NA, . / 100))
+measles_deduped <- measles %>%
+  distinct(index, name, state, county, city, enroll, mmr, .keep_all = TRUE)
 ```
 
+
+Did you go to Lincoln Elementary?
+
+```{r}
+lincoln_overall <- measles_deduped %>%
+  summarise(pct_lincoln_overall = mean(str_detect(name, "Lincoln")))
+
+lincoln <- measles_deduped %>%
+  group_by(state) %>%
+  summarise(pct_lincoln = mean(str_detect(name, "Lincoln")),
+            school_count = n())
+```
+
+
+Visualization
+
+```{r}
+lincoln %>%
+  mutate(lincoln_from = ifelse(state == "Illinois", "Yes", "No"),
+         state = fct_reorder(state, pct_lincoln)) %>%
+  ggplot(aes(state, pct_lincoln, fill = lincoln_from)) +
+  geom_col() +
+  geom_hline(data = lincoln_overall,
+             aes(yintercept = pct_lincoln_overall),
+             size = 0.7,
+             col = "red",
+             lty = 2) +
+  scale_y_continuous(labels = percent_format()) +
+  scale_fill_manual(values = c("#bababa", "#01665e"),
+                    guide = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  labs(title = "Did you go to Lincoln Elementary?",
+       subtitle = glue("Among {comma(sum(lincoln$school_count))} schools in {nrow(lincoln)} states | Red line is the overall percentage"),
+       x = "",
+       y = "Percent of elementary schools named after Abraham Lincoln",
+       fill = "Is Lincoln from here?") +
+  theme(panel.grid.minor = element_blank(),
+        plot.title = element_text(size = 16),
+        plot.subtitle = element_text(size = 12),
+        axis.text = element_text(size = 10))
+```
