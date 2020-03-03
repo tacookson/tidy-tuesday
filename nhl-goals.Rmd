@@ -1,0 +1,54 @@
+---
+title: "nhl-goals"
+author: "Alex Cookson"
+date: "02/03/2020"
+output: html_document
+---
+
+Setup and data import
+
+```{r}
+library(tidyverse)
+library(widyr)
+library(igraph)
+library(ggraph)
+library(glue)
+
+theme_set(theme_light())
+
+game_goals <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-03/game_goals.csv')
+top_250 <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-03/top_250.csv')
+season_goals <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-03/season_goals.csv')
+```
+
+Data inspection
+
+```{r}
+player_cor <- season_goals %>%
+  filter(team != "TOT") %>%
+  distinct(player, season, team) %>%
+  unite(team, season, team, sep = " ") %>%
+  pairwise_cor(player, team) %>%
+  top_n(40, wt = correlation)
+
+player_cor %>%
+  graph_from_data_frame() %>%
+  ggraph("linear", circular = TRUE) +
+  geom_edge_arc(aes(alpha = correlation,
+                    width = correlation),
+                colour = "#238b45") +
+  geom_node_label(aes(label = name),
+                  colour = "gray30",
+                  fill = "white",
+                  family = "sans",
+                  fontface = "bold",
+                  label.padding = unit(0.15, "lines"),
+                  label.r = unit(0, "lines"),
+                  label.size = NA) +
+  scale_edge_width(range = c(0.5, 2)) +
+  coord_fixed(ratio = 0.75) +
+  theme(legend.position = "none") +
+  labs(title = "Which of the greats played on the same team?",
+       subtitle = "Wider, darker lines mean players spent more time playing on the same team together",
+       caption = glue("{length(unique(player_cor$item1))} of the 250 top all-time scorers with the highest same-team correlation"))
+```
