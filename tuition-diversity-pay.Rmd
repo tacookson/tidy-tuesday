@@ -1,0 +1,30 @@
+---
+title: "College Tuition, Diversity, and Pay"
+author: "Alex Cookson"
+date: "09/03/2020"
+output: html_document
+---
+
+Setup and load data
+
+```{r}
+library(tidyverse)
+library(scales)
+
+tuition_cost <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/tuition_cost.csv')
+tuition_income <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/tuition_income.csv') 
+salary_potential <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/salary_potential.csv')
+historical_tuition <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/historical_tuition.csv')
+diversity_school <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-03-10/diversity_school.csv')
+```
+
+Data exploration
+
+```{r}
+diversity_school %>%
+  mutate(pct_enrollment = enrollment / total_enrollment) %>%
+  ggplot(aes(pct_enrollment)) +
+  geom_histogram() +
+  facet_wrap(~ category, scales = "free_x") +
+  scale_x_log10(labels = percent_format())
+```
