@@ -28,3 +28,12 @@ diversity_school %>%
   facet_wrap(~ category, scales = "free_x") +
   scale_x_log10(labels = percent_format())
 ```
+
+```{r}
+tuition_cost %>%
+  mutate(state_code = fct_reorder(state_code, room_and_board, median, na.rm = TRUE)) %>%
+  ggplot(aes(state_code, room_and_board)) +
+  geom_jitter() +
+  coord_flip()
+```
+
