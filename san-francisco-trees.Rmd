@@ -1,0 +1,62 @@
+---
+title: "San Francisco Trees"
+author: "Alex Cookson"
+date: "28/01/2020"
+output: html_document
+---
+
+Load libraries and import data
+
+```{r}
+library(tidyverse)
+library(sf)
+
+sf_trees_raw <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-28/sf_trees.csv')
+```
+
+
+Data cleaning:
+
+- Filter outlier longitude and latitude
+- Convert unknown tree species to NA
+- Separate scientific name from common name
+- When there is no listed common name, use scientific name for common name
+
+```{r}
+sf_trees <- sf_trees_raw %>%
+  filter(longitude > -130,
+         between(latitude, 37.6, 40)) %>%
+  mutate(species = ifelse(species %in% c("Tree(s) ::", "::"), NA_character_, species)) %>%
+  separate(species, into = c("science_name", "common_name"), sep = "::") %>%
+  mutate_at(vars(science_name, common_name), str_squish) %>%
+  mutate(common_name = ifelse(common_name == "", science_name, common_name))
+```
+
+
+Download shapefile to temporary file and read shapefile for roads
+
+```{r}
+temp_shapefile <- tempfile()
+download.file("https://www2.census.gov/geo/tiger/TIGER2017//ROADS/tl_2017_06075_roads.zip", temp_shapefile)
+sf_roads <- unzip(temp_shapefile, "tl_2017_06075_roads.shp") %>%
+  read_sf()
+```
+
+
+Visualize nine most common trees with roads as a background
+
+```{r}
+sf_trees %>%
+  mutate(common_name = fct_lump(common_name, 9)) %>%
+  filter(!is.na(common_name), common_name != "Other") %>%
+  add_count(common_name, name = "tree_count") %>%
+  mutate(common_name = fct_reorder(common_name, -tree_count)) %>%
+  ggplot() +
+  geom_sf(data = sf_roads, col = "grey90", alpha = 0.5) +
+  geom_point(aes(longitude, latitude), shape = ".", alpha = 0.7, col = "darkgreen") +
+  facet_wrap(~ common_name) +
+  coord_sf() +
+  labs(title = "Where can you find different types of trees in San Francisco?",
+       subtitle = "The nine most common tree species") +
+  theme_void()
+```
