@@ -1,0 +1,26 @@
+---
+title: "tour-de-france"
+author: "Alex Cookson"
+date: "07/04/2020"
+output: html_document
+---
+
+Setup and import data
+
+```{r}
+library(tidyverse)
+library(lubridate)
+
+tdf_winners <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-07/tdf_winners.csv')
+```
+
+```{r}
+tdf_winners %>%
+  mutate(stripped_title = year(start_date) %in% c(1996, 1999:2005),
+         avg_kph = distance / time_overall) %>%
+  ggplot(aes(start_date, avg_kph, col = stripped_title)) +
+  geom_point() +
+  expand_limits(y = 0)
+```
+
+
