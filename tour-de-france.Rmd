@@ -16,11 +16,21 @@ tdf_winners <- readr::read_csv('https://raw.githubusercontent.com/rfordatascienc
 
 ```{r}
 tdf_winners %>%
-  mutate(stripped_title = year(start_date) %in% c(1996, 1999:2005),
+  mutate(stripped_title = year(start_date) %in% c(1996, 1999:2005), # From https://www.britannica.com/sports/Tour-de-France
          avg_kph = distance / time_overall) %>%
   ggplot(aes(start_date, avg_kph, col = stripped_title)) +
   geom_point() +
   expand_limits(y = 0)
 ```
+
+Distance over time
+
+```{r}
+tdf_winners %>%
+  ggplot(aes(start_date, distance)) +
+  geom_point() +
+  geom_line()
+```
+
 
 
