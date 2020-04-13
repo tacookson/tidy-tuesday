@@ -1,0 +1,26 @@
+---
+title: "best-rap-artists"
+author: "Alex Cookson"
+date: "13/04/2020"
+output: html_document
+---
+
+Load libraries and import data
+
+```{r setup-and-import}
+library(tidyverse)
+
+polls <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-14/polls.csv')
+rankings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-14/rankings.csv')
+```
+
+
+Inspect data
+
+```{r}
+polls
+
+rankings %>%
+  arrange(desc(n1))
+```
+
