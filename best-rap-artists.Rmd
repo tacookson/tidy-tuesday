@@ -9,6 +9,9 @@ Load libraries and import data
 
 ```{r setup-and-import}
 library(tidyverse)
+library(glue)
+
+theme_set(theme_light())
 
 polls <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-14/polls.csv')
 rankings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-14/rankings.csv')
@@ -17,10 +20,44 @@ rankings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 
 Inspect data
 
-```{r}
-polls
-
-rankings %>%
-  arrange(desc(n1))
+```{r points-by-year}
+rankings_golden_age <- rankings %>%
+  group_by(year) %>%
+  summarise(total_points = sum(points)) %>%
+  mutate(golden_age = between(year, 1990, 1999))
+  
+rankings_golden_age %>%
+  ggplot(aes(year, total_points, col = golden_age, group = 1)) +
+  geom_point() +
+  geom_line(size = 0.5, alpha = 0.2) +
+  annotate("rect", xmin = 1989.5, xmax = 1999.5, ymin = 0, ymax = 320, fill = "grey50", alpha = 0.1) +
+  annotate("text", x = 2000, y = 280, hjust = 0, label = "Juicy (The Notorious B.I.G.)\nwas the top-scoring song of\n1994 (and overall)") +
+  annotate("curve", x = 1999.8, xend = 1994.5, y = 300, yend = 310, curvature = 0.25, arrow = arrow(length = unit(2, "mm"))) +
+  scale_x_continuous(breaks = seq(1980, 2020, 5)) +
+  labs(title = "The 90s was a golden age of rap",
+       subtitle = "",
+       caption = "Source: BBC Music",
+       x = "",
+       y = "") +
+  theme(panel.grid = element_blank())
 ```
+
+```{r top-1994-songs}
+rankings %>%
+  filter(year == 1994) %>%
+  mutate(title = fct_reorder(glue("{title} ({artist})"), points)) %>%
+  ggplot(aes(points, title, fill = artist)) +
+  geom_col() +
+  labs(title = "Is The Notorious B.I.G. the G.O.A.T. of rap?",
+       subtitle = "Songs from 1994, the highest-scoring year among critics",
+       caption = "Source: BBC Music") +
+  theme(legend.position = "none")
+```
+
+```{r}
+rankings %>%
+  count(artist, wt = points, sort = TRUE)
+```
+
+
 
