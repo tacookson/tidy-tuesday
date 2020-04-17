@@ -10,6 +10,8 @@ Load libraries and import data
 ```{r setup-and-import}
 library(tidyverse)
 library(glue)
+library(extrafont)
+library(ggtext)
 
 theme_set(theme_light())
 
@@ -28,21 +30,103 @@ rankings_golden_age <- rankings %>%
   
 rankings_golden_age %>%
   ggplot(aes(year, total_points, col = golden_age, group = 1)) +
-  geom_point() +
-  geom_line(size = 0.5, alpha = 0.2) +
-  annotate("rect", xmin = 1989.5, xmax = 1999.5, ymin = 0, ymax = 320, fill = "grey50", alpha = 0.1) +
-  annotate("text", x = 2000, y = 280, hjust = 0, label = "Juicy (The Notorious B.I.G.)\nwas the top-scoring song of\n1994 (and overall)") +
-  annotate("curve", x = 1999.8, xend = 1994.5, y = 300, yend = 310, curvature = 0.25, arrow = arrow(length = unit(2, "mm"))) +
+  geom_line(size = 0.5, alpha = 0.3) +
+  geom_point(size = 2) +
+  annotate(
+    "rect",
+    xmin = 1989.5,
+    xmax = 1999.5,
+    ymin = 0,
+    ymax = 320,
+    fill = "grey70",
+    alpha = 0.1
+  ) +
+  annotate(
+    "text",
+    x = 1993.5,
+    y = 35,
+    hjust = 0,
+    family = "Bahnschrift",
+    label = "A Tribe Called Quest\nstarted the decade with\nhits in 1990 and 1991"
+  ) +
+  annotate(
+    "curve",
+    x = 1993.3,
+    xend = 1990.5,
+    y = 10,
+    yend = 10,
+    curvature = -0.25,
+    arrow = arrow(length = unit(2, "mm"))
+  ) +
+  annotate(
+    "curve",
+    x = 1993.3,
+    xend = 1991.5,
+    y = 50,
+    yend = 47,
+    curvature = 0.25,
+    arrow = arrow(length = unit(2, "mm"))
+  ) +
+  annotate(
+    "text",
+    x = 2000,
+    y = 280,
+    hjust = 0,
+    family = "Bahnschrift",
+    label = "The Notorious B.I.G.'s \"Juicy\"\nwas the top-scoring song of\n1994 (and overall)"
+  ) +
+  annotate(
+    "curve",
+    x = 1999.8,
+    xend = 1994.5,
+    y = 300,
+    yend = 310,
+    curvature = 0.25,
+    arrow = arrow(length = unit(2, "mm"))
+  ) +
+  annotate(
+    "text",
+    x = 1988.5,
+    y = 210,
+    hjust = 1,
+    family = "Bahnschrift",
+    label = "Ice Cube's \"It Was\nA Good Day\" is my\npersonal favourite"
+  ) +
+    annotate(
+    "curve",
+    x = 1988.8,
+    xend = 1991.5,
+    y = 230,
+    yend = 252,
+    curvature = -0.25,
+    arrow = arrow(length = unit(2, "mm"))
+  ) +
   scale_x_continuous(breaks = seq(1980, 2020, 5)) +
-  labs(title = "The 90s was a golden age of rap",
-       subtitle = "",
-       caption = "Source: BBC Music",
-       x = "",
-       y = "") +
-  theme(panel.grid = element_blank())
+  scale_colour_manual(values = c("#011627", "#FF9F1C")) +
+  labs(
+    title = "Was the 90s hip hop's <b><span style = 'color:#FF9F1C;'>Golden Age</span></b>?",
+    subtitle = "Total points for songs in a given year, based on votes by 108 critics",
+    caption = "Source: BBC Music",
+    x = "",
+    y = "Points"
+  ) +
+  theme(
+    legend.position = "none",
+    text = element_text(family = "Bahnschrift"),
+    panel.grid = element_blank(),
+    plot.title = element_textbox_simple()
+  )
 ```
 
-```{r top-1994-songs}
+```{r, save-image}
+ggsave("best-hip-hop-artists.png", dpi = 720, height = 5, width = 8.4)
+```
+
+
+
+### Appendix
+
+```{r top-1994-songs, eval = FALSE}
 rankings %>%
   filter(year == 1994) %>%
   mutate(title = fct_reorder(glue("{title} ({artist})"), points)) %>%
@@ -54,10 +138,8 @@ rankings %>%
   theme(legend.position = "none")
 ```
 
-```{r}
+```{r simple-rankings, eval = FALSE}
 rankings %>%
   count(artist, wt = points, sort = TRUE)
 ```
-
-
 
