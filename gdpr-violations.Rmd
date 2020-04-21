@@ -21,44 +21,112 @@ gdpr_violations <- readr::read_tsv('https://raw.githubusercontent.com/rfordatasc
 gdpr_text <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-21/gdpr_text.tsv')
 ```
 
-```{r}
-gdpr_violations %>%
-  ggplot(aes(price)) +
-  geom_histogram() +
-  scale_x_log10(labels = label_dollar())
 
+```{r fines-point-plot}
 gdpr_violations %>%
-  group_by(controller) %>%
-  summarise(violations = n(),
-            fines = sum(price)) %>%
-  top_n(10, wt = fines) %>%
-  mutate(controller = fct_reorder(controller, fines)) %>%
-  ggplot(aes(fines, controller, fill = controller)) +
-  geom_col() +
-  scale_x_continuous(labels = label_dollar(scale = 1/1e6, prefix = "€", suffix = " M")) +
-  theme(legend.position = "none")
-```
-
-```{r}
-gdpr_violations %>%
+  filter(price > 0) %>%
   mutate(name = fct_reorder(name, price, max)) %>%
   ggplot(aes(price, name, size = price, col = name)) +
-  geom_point(position = position_jitter(width = 0, height = 0.15),
-             shape = 16,
-             alpha = 0.8) +
-  scale_x_continuous(labels = label_dollar(scale = 1/1e6, prefix = "€", suffix = " M")) +
+  geom_point(
+    position = position_jitter(width = 0, height = 0.15),
+    shape = 16,
+    alpha = 0.7
+  ) +
+  scale_x_continuous(labels = label_dollar(
+    scale = 1 / 1e6,
+    prefix = "€",
+    suffix = " M"
+  )) +
   scale_colour_fish(option = "Trimma_lantana",
                     discrete = TRUE,
                     direction = -1) +
-  labs(title = "France fined Google €50M for GDPR violations",
-       x = "Fine amount",
-       y = "") +
-  theme(legend.position = "none",
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.major.y = element_line(colour = "grey95"),
-        text = element_text(family = "Bahnschrift"))
+  scale_size(range = c(1, 12)) +
+  annotate(
+    "label",
+    x = 3.5e7,
+    y = 21,
+    size = 3.5,
+    family = "Bahnschrift",
+    label.size = NA,
+    fill = "grey95",
+    hjust = 0,
+    label = "France fined Google €50M for illegally processing\nits users' personal data for ad personalization purposes"
+  ) +
+  annotate(
+    "curve",
+    x = 48e6,
+    y = 21,
+    xend = 50e6,
+    yend = 23.3,
+    curvature = 0.5,
+    arrow = arrow(length = unit(2, "mm"))
+  ) +
+  annotate(
+    "label",
+    x = 3e7,
+    y = 18,
+    size = 3.5,
+    family = "Bahnschrift",
+    label.size = NA,
+    fill = "grey95",
+    hjust = 0,
+    label = "Italy fined telecom TIM €27.8M for unsolicited\npromotional calls to several million people.\nOne person received 155 calls."
+  ) +
+  annotate(
+    "curve",
+    x = 30e6,
+    y = 18,
+    xend = 27.6e6,
+    yend = 22.5,
+    curvature = -0.3,
+    arrow = arrow(length = unit(2, "mm"))
+  ) +
+  annotate(
+    "label",
+    x = 5e6,
+    y = 4,
+    size = 3.5,
+    family = "Bahnschrift",
+    label.size = NA,
+    fill = "grey95",
+    hjust = 0,
+    label = "Hungary has issued the smallest fine to-date:\n€90 for unlawfully charging a patient a copying fee"
+  ) +
+  annotate(
+    "curve",
+    x = 9e6,
+    y = 4.5,
+    xend = 0.5e6,
+    yend = 8,
+    curvature = 0.3,
+    arrow = arrow(length = unit(2, "mm"))
+  ) +
+  labs(
+    title = "Most GDPR fines are small, but there are a few whoppers",
+    caption = "Source: PrivacyAffairs.com | Graphics: @alexcookson",
+    x = "Fine amount",
+    y = ""
+  ) +
+  theme(
+    legend.position = "none",
+    text = element_text(family = "Bahnschrift"),
+    axis.text = element_text(size = 11),
+    axis.title = element_text(size = 9),
+    plot.caption = element_text(size = 7),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.y = element_line(colour = "grey80"),
+    panel.border = element_blank(),
+    plot.background = element_rect(fill = "grey95"),
+    panel.background = element_rect(fill = "grey95"),
+    axis.ticks = element_blank()
+  )
 ```
+
+```{r save-png}
+ggsave("gdpr-violations.png", dpi = 300, height = 10, width = 16)
+```
+
 
 
 
