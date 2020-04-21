@@ -11,8 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r setup-and-import}
 library(tidyverse)
-library(lubridate)
 library(scales)
+library(fishualize)
+library(extrafont)
+
+theme_set(theme_light())
 
 gdpr_violations <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-21/gdpr_violations.tsv')
 gdpr_text <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-04-21/gdpr_text.tsv')
@@ -35,5 +38,53 @@ gdpr_violations %>%
   scale_x_continuous(labels = label_dollar(scale = 1/1e6, prefix = "€", suffix = " M")) +
   theme(legend.position = "none")
 ```
+
+```{r}
+gdpr_violations %>%
+  mutate(name = fct_reorder(name, price, max)) %>%
+  ggplot(aes(price, name, size = price, col = name)) +
+  geom_point(position = position_jitter(width = 0, height = 0.15),
+             shape = 16,
+             alpha = 0.8) +
+  scale_x_continuous(labels = label_dollar(scale = 1/1e6, prefix = "€", suffix = " M")) +
+  scale_colour_fish(option = "Trimma_lantana",
+                    discrete = TRUE,
+                    direction = -1) +
+  labs(title = "France fined Google €50M for GDPR violations",
+       x = "Fine amount",
+       y = "") +
+  theme(legend.position = "none",
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "grey95"),
+        text = element_text(family = "Bahnschrift"))
+```
+
+
+
+
+### Appendix
+
+Topic modelling fun
+
+```{r topic-modelling, eval = FALSE}
+library(topicmodels)
+library(tm)
+
+corpus <- Corpus(VectorSource(gdpr_violations$summary))
+dtm <- DocumentTermMatrix(corpus, control = list(stopwords = TRUE,
+                                                 minWordLength = 3,
+                                                 removeNumbers = TRUE,
+                                                 removePunctuation = TRUE,
+                                                 tolower = TRUE))
+
+topic_model <- LDA(dtm, k = 5, control = list(seed = 24601))
+
+topics <- topics(topic_model, 3)
+topics
+
+terms <- terms(topic_model, 5)
+```
+
 
 
