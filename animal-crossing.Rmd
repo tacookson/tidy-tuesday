@@ -8,56 +8,35 @@ output: html_document
 
 ```{r setup-and-import}
 library(tidyverse)
-library(scales)
+library(treemapify)
+library(extrafont)
+library(fishualize)
 
-critic <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/critic.tsv')
-user_reviews <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/user_reviews.tsv')
 items <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/items.csv')
-villagers <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-05/villagers.csv')
+
 ```
 
-```{r}
-villagers %>%
-  count(personality, species, gender, sort = TRUE) %>%
-  complete(personality, species, gender, fill = list(n = 0)) %>%
-  ggplot(aes(n, species, fill = personality)) +
-  geom_col() +
-  facet_wrap(~ gender)
-```
-
-```{r}
-villagers %>%
-  count(species, gender) %>%
-  complete(species, gender, fill = list(n = 0)) %>%
-  group_by(species) %>%
-  mutate(pct_gender = n / sum(n),
-         pct_female = pct_gender[gender == "female"]) %>%
-  ungroup() %>%
-  mutate(species = fct_reorder(species, pct_female)) %>%
-  ggplot(aes(pct_gender, species, fill = gender)) +
-  geom_col() +
-  geom_vline(xintercept = 0.5, lty = 2, col = "black") +
-  scale_x_continuous(labels = label_percent()) +
-  facet_wrap(~ gender)
-```
-
-```{r}
+```{r items-treemap}
 items %>%
-  ggplot(aes(buy_value)) +
-  geom_histogram() +
-  scale_x_log10(labels = label_dollar())
-
-items %>%
-  filter(buy_currency == sell_currency) %>%
-  mutate(spread = buy_value - sell_value,
-         pct_spread = spread / buy_value) %>%
-  filter(!is.na(spread)) %>%
-  ggplot(aes(pct_spread)) +
-  geom_histogram()
+  filter(buy_currency == "bells") %>%
+  group_by(category) %>%
+  summarise(median_buy_value = median(buy_value),
+            items = n()) %>%
+  ggplot(aes(area = items, fill = median_buy_value, label = category)) +
+  geom_treemap() +
+  geom_treemap_text(family = "Bahnschrift", colour = "white", place = "centre", grow = TRUE) +
+  scale_fill_fish("Trimma_lantana") +
+  expand_limits(fill = c(0, 4000)) +
+  labs(title = "There's a whole wide world of things to buy in Animal Crossing: New Horizons",
+       subtitle = "Size represents number of items | Colour represents median price of category",
+       fill = "Median Price\n(bells)\n",
+       caption = "Source: VillagerDB | Graphic: @alexcookson") +
+  theme(text = element_text(family = "Bahnschrift"))
 ```
 
-
-
+```{r save}
+ggsave("animal-crossing-items.png", dpi = 720, height = 8, width = 16)
+```
 
 
 
