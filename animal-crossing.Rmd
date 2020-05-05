@@ -35,7 +35,7 @@ items %>%
 ```
 
 ```{r save}
-ggsave("animal-crossing-items.png", dpi = 720, height = 8, width = 16)
+ggsave("animal-crossing-items.png", dpi = 720, height = 8, width = 12)
 ```
 
 
