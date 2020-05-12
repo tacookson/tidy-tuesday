@@ -1,0 +1,47 @@
+---
+title: "volcano-eruptions"
+author: "Alex Cookson"
+date: "11/05/2020"
+output: html_document
+---
+
+```{r setup-and-import}
+library(tidyverse)
+library(lubridate)
+library(gganimate)
+
+volcano <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-12/volcano.csv')
+eruptions <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-12/eruptions.csv')
+events <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-12/events.csv')
+```
+
+```{r eruptions-animation}
+p <- eruptions %>%
+  filter(between(start_year, 1900, 2020),
+         eruption_category != "Discredited Eruption",
+         !is.na(vei)) %>%
+  # Filter events for which we have no specific date
+  filter(start_month > 0, start_day > 0, end_month > 0, end_day > 0) %>%
+  mutate(start_date = decimal_date(ymd(paste(start_year, start_month, start_day, sep = "-"))),
+         end_date = decimal_date(ymd(paste(end_year, end_month, end_day, sep = "-"))),
+         eruption_length = end_date - start_date) %>%
+  ggplot(aes(longitude, latitude, size = vei, group = eruption_number)) +
+  borders(colour = "grey80") +
+  geom_point(col = "#FF5800", alpha = 0.6) +
+  scale_radius(range = c(0.1, 10)) +
+  ggthemes::theme_map() +
+  theme(legend.position = "none") +
+  transition_events(start = start_year,
+                    end = end_year,
+                    enter_length = eruption_length / 2,
+                    exit_length = eruption_length / 2) +
+  ggtitle("Year: {floor(frame_time)}") +
+  enter_grow() +
+  exit_shrink()
+
+anim <- animate(p, fps = 10, nframes = 10 * 120, end_pause = 10, width = 800, height = 500)
+
+anim_save("volcano-eruptions-1900-2020.gif", anim)
+```
+
+
