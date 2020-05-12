@@ -10,14 +10,48 @@ library(tidyverse)
 library(lubridate)
 library(gganimate)
 
-volcano <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-12/volcano.csv')
 eruptions <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-12/eruptions.csv')
-events <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-12/events.csv')
 ```
 
-```{r eruptions-animation}
+```{r eruptions-animation-by-year}
 p <- eruptions %>%
-  filter(between(start_year, 1900, 2020),
+  filter(start_year >= 1900,
+         eruption_category != "Discredited Eruption",
+         !is.na(vei)) %>%
+  # Filter events for which we have no specific date
+  filter(start_month > 0, start_day > 0, end_month > 0, end_day > 0) %>%
+  mutate(start_date = decimal_date(ymd(paste(start_year, start_month, start_day, sep = "-"))),
+         end_date = decimal_date(ymd(paste(end_year, end_month, end_day, sep = "-"))),
+         eruption_length = end_date - start_date) %>%
+  ggplot(aes(longitude, latitude, size = vei, group = start_date)) +
+  borders(colour = "grey80", fill = "grey80") +
+  geom_point(shape = 16, colour = "#ff5800", fill = "#ff5800", alpha = 0.6) +
+  scale_radius(range = c(0.1, 10)) +
+  ggthemes::theme_map() +
+  theme(legend.position = "none") +
+  transition_time(start_date) +
+  ggtitle("Year: {floor(frame_time)}") +
+  enter_grow() +
+  exit_fade(alpha = 0.2) +
+  shadow_mark(alpha = 0.2)
+
+# Short
+anim <- animate(p, fps = 5, nframes = 5 * 20, end_pause = 20, width = 800, height = 500)
+
+# Long
+# anim <- animate(p, fps = 5, nframes = 5 * 120, end_pause = 20, width = 800, height = 500)
+
+anim_save("volcano-eruptions-1900-2020-short.gif", anim)
+```
+
+
+### Unused Code
+
+```{r eruptions-animation-by-event, eval = FALSE}
+# Could not get event data to work with events remaining on the map after ending
+
+p <- eruptions %>%
+  filter(between(start_year, 1900, 1905),
          eruption_category != "Discredited Eruption",
          !is.na(vei)) %>%
   # Filter events for which we have no specific date
@@ -26,22 +60,24 @@ p <- eruptions %>%
          end_date = decimal_date(ymd(paste(end_year, end_month, end_day, sep = "-"))),
          eruption_length = end_date - start_date) %>%
   ggplot(aes(longitude, latitude, size = vei, group = eruption_number)) +
-  borders(colour = "grey80") +
-  geom_point(col = "#FF5800", alpha = 0.6) +
+  borders(colour = "grey80", fill = "grey80") +
+  geom_point(col = "#ff5800", alpha = 0.6) +
   scale_radius(range = c(0.1, 10)) +
   ggthemes::theme_map() +
   theme(legend.position = "none") +
   transition_events(start = start_year,
                     end = end_year,
-                    enter_length = eruption_length / 2,
-                    exit_length = eruption_length / 2) +
+                    enter_length = 10 / 365,
+                    exit_length = 10 / 365) +
   ggtitle("Year: {floor(frame_time)}") +
   enter_grow() +
-  exit_shrink()
+  exit_fade()
 
-anim <- animate(p, fps = 10, nframes = 10 * 120, end_pause = 10, width = 800, height = 500)
+anim <- animate(p, fps = 10, nframes = 10 * 5, end_pause = 10, width = 800, height = 500)
 
-anim_save("volcano-eruptions-1900-2020.gif", anim)
+anim
+
+# anim_save("volcano-eruptions-1900-2020.gif", anim)
 ```
 
 
