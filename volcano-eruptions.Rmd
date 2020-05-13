@@ -9,75 +9,52 @@ output: html_document
 library(tidyverse)
 library(lubridate)
 library(gganimate)
+library(extrafont)
+library(ggtext)
 
+volcano <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-12/volcano.csv')
 eruptions <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-12/eruptions.csv')
 ```
 
 ```{r eruptions-animation-by-year}
 p <- eruptions %>%
-  filter(start_year >= 1900,
+  # Only non-discredited eruptions since 1970
+  # Only ones where we know the VEI (since VEI is mapped to size of point)
+  filter(start_year >= 1970,
          eruption_category != "Discredited Eruption",
          !is.na(vei)) %>%
-  # Filter events for which we have no specific date
-  filter(start_month > 0, start_day > 0, end_month > 0, end_day > 0) %>%
-  mutate(start_date = decimal_date(ymd(paste(start_year, start_month, start_day, sep = "-"))),
-         end_date = decimal_date(ymd(paste(end_year, end_month, end_day, sep = "-"))),
-         eruption_length = end_date - start_date) %>%
-  ggplot(aes(longitude, latitude, size = vei, group = start_date)) +
-  borders(colour = "grey80", fill = "grey80") +
-  geom_point(shape = 16, colour = "#ff5800", fill = "#ff5800", alpha = 0.6) +
-  scale_radius(range = c(0.1, 10)) +
-  ggthemes::theme_map() +
-  theme(legend.position = "none") +
-  transition_time(start_date) +
-  ggtitle("Year: {floor(frame_time)}") +
+  # Convert date fields into decimal year (e.g., Jun 2016 becomes 2016.5)
+  mutate(start_date = decimal_date(ymd(
+    paste(
+      year = start_year,
+      month = coalesce(pmax(start_month, 1), 1),
+      day = coalesce(pmax(start_day, 1), 1),
+      sep = "-"
+    )
+  ))) %>%
+  ggplot(aes(longitude, latitude, size = vei, group = start_year)) +
+  borders(colour = "grey90", fill = "grey90") +
+  geom_point(colour = "#e04324",
+             shape = 16,
+             alpha = 0.3) +
+  scale_radius(range = c(0.1, 9)) +
+  transition_time(start_year, range = c(1969, 2020)) +
+  labs(title = "KABOOM! The Past 50 Years of Volcanic Activity",
+       subtitle = "Volcanic <span style = 'color:#e04324'>**eruptions**</span> from 1970 to {pmax(round(frame_time, 0), 1970)}",
+       caption = "Source: Nature | Visualization: @alexcookson") +
   enter_grow() +
-  exit_fade(alpha = 0.2) +
-  shadow_mark(alpha = 0.2)
-
-# Short
-anim <- animate(p, fps = 5, nframes = 5 * 20, end_pause = 20, width = 800, height = 500)
-
-# Long
-# anim <- animate(p, fps = 5, nframes = 5 * 120, end_pause = 20, width = 800, height = 500)
-
-anim_save("volcano-eruptions-1900-2020-short.gif", anim)
-```
-
-
-### Unused Code
-
-```{r eruptions-animation-by-event, eval = FALSE}
-# Could not get event data to work with events remaining on the map after ending
-
-p <- eruptions %>%
-  filter(between(start_year, 1900, 1905),
-         eruption_category != "Discredited Eruption",
-         !is.na(vei)) %>%
-  # Filter events for which we have no specific date
-  filter(start_month > 0, start_day > 0, end_month > 0, end_day > 0) %>%
-  mutate(start_date = decimal_date(ymd(paste(start_year, start_month, start_day, sep = "-"))),
-         end_date = decimal_date(ymd(paste(end_year, end_month, end_day, sep = "-"))),
-         eruption_length = end_date - start_date) %>%
-  ggplot(aes(longitude, latitude, size = vei, group = eruption_number)) +
-  borders(colour = "grey80", fill = "grey80") +
-  geom_point(col = "#ff5800", alpha = 0.6) +
-  scale_radius(range = c(0.1, 10)) +
+  shadow_mark() +
   ggthemes::theme_map() +
-  theme(legend.position = "none") +
-  transition_events(start = start_year,
-                    end = end_year,
-                    enter_length = 10 / 365,
-                    exit_length = 10 / 365) +
-  ggtitle("Year: {floor(frame_time)}") +
-  enter_grow() +
-  exit_fade()
+  theme(
+    legend.position = "none",
+    plot.title = element_textbox_simple(family = "Bahnschrift", size = 22),
+    plot.subtitle = element_textbox_simple(family = "Bahnschrift", size = 18),
+    plot.caption = element_text(family = "Bahnschrift", size = 12)
+  )
 
-anim <- animate(p, fps = 10, nframes = 10 * 5, end_pause = 10, width = 800, height = 500)
+anim <- animate(p, fps = 10, nframes = 10 * 30, start_pause = 10, end_pause = 25, width = 800, height = 500)
 
-anim
-
-# anim_save("volcano-eruptions-1900-2020.gif", anim)
+anim_save("volcano-eruptions-1970-2020-short.gif", anim)
 ```
 
 
