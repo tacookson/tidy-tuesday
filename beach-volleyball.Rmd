@@ -1,0 +1,24 @@
+---
+title: "beach-volleyball"
+author: "Alex Cookson"
+date: "17/05/2020"
+output: html_document
+---
+
+```{r setup-and-import, message = FALSE, warning = FALSE}
+library(tidyverse)
+
+theme_set(theme_light())
+
+vb_matches <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-19/vb_matches.csv', guess_max = 76000)
+```
+
+```{r eda}
+vb_matches %>%
+  group_by(w_player1) %>%
+  summarise(avg_serve_errors = mean(w_p1_tot_serve_errors, na.rm = TRUE),
+            games = n()) %>%
+  filter(games > 1) %>%
+  arrange(desc(avg_serve_errors))
+```
+
