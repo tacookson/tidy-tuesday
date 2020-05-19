@@ -13,12 +13,35 @@ theme_set(theme_light())
 vb_matches <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-05-19/vb_matches.csv', guess_max = 76000)
 ```
 
-```{r eda}
-vb_matches %>%
-  group_by(w_player1) %>%
-  summarise(avg_serve_errors = mean(w_p1_tot_serve_errors, na.rm = TRUE),
-            games = n()) %>%
-  filter(games > 1) %>%
-  arrange(desc(avg_serve_errors))
-```
+```{r tidy-into-matches-and-players}
+matches <- vb_matches %>%
+  # Add unique id to identify matches
+  mutate(match_id = row_number()) %>%
+  # Get rid of player-specific fields
+  select(-matches("[wl]_p[12]"),
+         -contains("player")) %>%
+  # Re-order so that match_id is at beginning
+  select(match_id, everything())
 
+players <- vb_matches %>%
+  # Add unique id to identify matches
+  mutate(match_id = row_number()) %>%
+  # Rename name fields for consistent format (win/lose_playernumber_fieldname)
+  rename(w_p1_name = w_player1,
+         w_p2_name = w_player2,
+         l_p1_name = l_player1,
+         l_p2_name = l_player2) %>%
+  # Select only fields associated with an individual player
+  select(match_id, matches("[wl]_p[12]")) %>%
+  # Date class of birthdate columns causes pivot_longer() not to break
+  select(-contains("birthdate")) %>%
+  # Separate and pivot players based on win/lose, player number, and field name
+  pivot_longer(w_p1_name:l_p2_tot_digs,
+               names_to = c("win_lose", "player", "measure"),
+               names_pattern = "([wl])_(p[12])_(.*)",
+               values_to = "value",
+               values_ptypes = list(value = "character")) %>%
+  # Re-assemble data so the unit of observation is an individual player in an individual match
+  pivot_wider(names_from = measure,
+              values_from = value)
+```
