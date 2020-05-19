@@ -43,5 +43,8 @@ players <- vb_matches %>%
                values_ptypes = list(value = "character")) %>%
   # Re-assemble data so the unit of observation is an individual player in an individual match
   pivot_wider(names_from = measure,
-              values_from = value)
+              values_from = value) %>%
+  # Convert number fields into double or integer
+  mutate_at(vars(age, tot_hitpct), as.double) %>%
+  mutate_at(vars(hgt, tot_attacks:tot_errors, tot_aces:tot_digs), as.integer)
 ```
