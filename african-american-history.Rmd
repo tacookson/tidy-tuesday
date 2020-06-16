@@ -1,0 +1,18 @@
+---
+title: "african-american-history"
+author: "Alex Cookson"
+date: "15/06/2020"
+output: html_document
+---
+
+```{r setup-and-import}
+library(tidyverse)
+
+slave_routes <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-16/slave_routes.csv')
+```
+
+```{r eda}
+slave_routes %>%
+  count(port_origin, port_arrival, wt = n_slaves_arrived, sort = TRUE)
+```
+
