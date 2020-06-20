@@ -1,2 +1,2 @@
-# tidy-tuesday
-R code from Tidy Tuesday data analyses
+# #TidyTuesday Code
+This repository contains code used for [#TidyTuesday](https://github.com/rfordatascience/tidytuesday) visualizations. It is intended to be a quick-and-dirty way to share code chunks along with visualizations on Twitter. As I've done more visualizations, though, it has gotten a bit disorganized. I am planning on developing a folder structure and re-organizing to make it easier for folks to explore or find specific weeks.
