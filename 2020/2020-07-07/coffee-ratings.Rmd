@@ -1,0 +1,39 @@
+---
+title: "coffee-ratings"
+author: "Alex Cookson"
+date: "06/07/2020"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+
+theme_set(theme_light())
+
+coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv') %>%
+  select(-certification_address, -certification_contact)
+```
+
+
+```{r eda}
+features <- coffee_ratings %>%
+  select(altitude_mean_meters, species, variety, processing_method, aroma:sweetness) %>%
+  pivot_longer(aroma:sweetness, names_to = "feature", values_to = "grade")
+
+features %>%
+  filter(altitude_mean_meters < 100000) %>%
+  ggplot(aes(altitude_mean_meters, grade, colour = feature)) +
+  geom_point(alpha = 0.5, show.legend = FALSE) +
+  facet_wrap(~ feature)
+```
+
+
+### Appendix
+
+Ideas:
+
+- Tanzanian coffee
+- Construct flavour profiles
+- Effect of altitude
+
+
