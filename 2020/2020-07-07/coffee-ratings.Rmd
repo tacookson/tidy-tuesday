@@ -7,6 +7,8 @@ output: html_document
 
 ```{r setup}
 library(tidyverse)
+library(glue)
+library(tidytext)
 
 theme_set(theme_light())
 
@@ -15,18 +17,26 @@ coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatasci
 ```
 
 
-```{r eda}
-features <- coffee_ratings %>%
-  select(altitude_mean_meters, species, variety, processing_method, aroma:sweetness) %>%
-  pivot_longer(aroma:sweetness, names_to = "feature", values_to = "grade")
-
-features %>%
-  filter(altitude_mean_meters < 100000) %>%
-  ggplot(aes(altitude_mean_meters, grade, colour = feature)) +
-  geom_point(alpha = 0.5, show.legend = FALSE) +
-  facet_wrap(~ feature)
+```{r variety-flavour-profile}
+coffee_ratings %>%
+  mutate(id = row_number()) %>%
+  filter(!is.na(variety)) %>%
+  select(id, variety, aroma:balance) %>%
+  group_by(variety) %>%
+  filter(n() > 10) %>%
+  ungroup() %>%
+  pivot_longer(aroma:balance, names_to = "feature", values_to = "score") %>%
+  group_by(id) %>%
+  filter(min(score) != 0) %>%
+  ungroup() %>%
+  mutate(variety = reorder_within(variety, by = score, within = feature, fun = median)) %>%
+  ggplot(aes(score, variety, colour = variety)) +
+  geom_jitter(alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_y_reordered() +
+  facet_wrap(~ feature, scales = "free_y") +
+  theme(legend.position = "none")
 ```
-
 
 ### Appendix
 
