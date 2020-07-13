@@ -7,8 +7,8 @@ output: html_document
 
 ```{r setup}
 library(tidyverse)
-library(glue)
 library(tidytext)
+library(scales)
 
 theme_set(theme_light())
 
@@ -37,6 +37,29 @@ coffee_ratings %>%
   facet_wrap(~ feature, scales = "free_y") +
   theme(legend.position = "none")
 ```
+
+```{r rescaling}
+coffee_ratings %>%
+  mutate(id = row_number()) %>%
+  filter(!is.na(variety)) %>%
+  select(id, variety, aroma:balance) %>%
+  group_by(variety) %>%
+  filter(n() > 10) %>%
+  ungroup() %>%
+  pivot_longer(aroma:balance, names_to = "feature", values_to = "score") %>%
+  group_by(id) %>%
+  filter(min(score) != 0) %>%
+  ungroup() %>%
+  mutate(score = rescale(score, to = c(0, 10))) %>%
+  mutate(variety = reorder_within(variety, by = score, within = feature, fun = median)) %>%
+  ggplot(aes(score, variety, colour = variety)) +
+  geom_jitter(alpha = 0.1) +
+  geom_boxplot(fill = NA) +
+  scale_y_reordered() +
+  facet_wrap(~ feature, scales = "free_y") +
+  theme(legend.position = "none")
+```
+
 
 ### Appendix
 
