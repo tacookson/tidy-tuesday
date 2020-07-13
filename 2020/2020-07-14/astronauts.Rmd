@@ -1,0 +1,61 @@
+---
+title: "astronauts"
+author: "Alex Cookson"
+date: "13/07/2020"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+
+theme_set(theme_minimal())
+
+astronauts <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-14/astronauts.csv')
+```
+
+```{r eda}
+astronauts %>%
+  filter(total_eva_hrs > 0) %>%
+  distinct(name, nationality, total_eva_hrs) %>%
+  top_n(20, wt = total_eva_hrs) %>%
+  mutate(name = fct_reorder(name, total_eva_hrs)) %>%
+  ggplot(aes(total_eva_hrs, name, fill = nationality)) +
+  geom_col()
+```
+
+```{r}
+astronauts %>%
+  filter(nationality %in% c("U.S.", "U.S.S.R/Russia", "U.S.S.R/Ukraine")) %>%
+  extract(ascend_shuttle,
+          into = "ascent_spacecraft",
+          regex = "([A-Za-z]+)[\\s-]?",
+          remove = FALSE) %>%
+  mutate(
+    ascent_spacecraft = case_when(
+      ascent_spacecraft == "STS" ~ "Space Shuttle (STS)",
+      ascent_spacecraft == "MA" ~ "Mercury",
+      ascent_spacecraft == "ASTP" ~ "Apollo-Soyuz (ASTP)",
+      TRUE ~ str_to_title(ascent_spacecraft))
+    ) %>%
+  group_by(year_of_mission, ascent_spacecraft, nationality) %>%
+  summarise(astronauts = n()) %>%
+  ungroup() %>%
+  mutate(ascent_spacecraft = fct_reorder(ascent_spacecraft, year_of_mission, min)) %>%
+  ggplot(aes(year_of_mission, ascent_spacecraft, colour = nationality, size = astronauts)) +
+  geom_point(position = position_dodge(width = 0.5))
+```
+
+```{r}
+astronauts %>%
+  count(nationality, sort = TRUE)
+
+# TO DO: NEED FINER DISCRIMINATION OF NAUT TYPE -- THERE ARE ASTRONAUTS THAT SHOULD BE COSMONAUTS
+astronauts %>%
+  mutate(naut_type = case_when(str_detect(nationality, "U.S.S.R") ~ "cosmonaut",
+                               nationality == "China" ~ "taikonaut",
+                               TRUE ~ "astronaut"))
+```
+
+
+
+
