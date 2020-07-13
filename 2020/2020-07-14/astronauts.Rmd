@@ -7,55 +7,58 @@ output: html_document
 
 ```{r setup}
 library(tidyverse)
+library(extrafont)
+library(ggtext)
 
 theme_set(theme_minimal())
 
 astronauts <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-14/astronauts.csv')
 ```
 
-```{r eda}
-astronauts %>%
-  filter(total_eva_hrs > 0) %>%
-  distinct(name, nationality, total_eva_hrs) %>%
-  top_n(20, wt = total_eva_hrs) %>%
-  mutate(name = fct_reorder(name, total_eva_hrs)) %>%
-  ggplot(aes(total_eva_hrs, name, fill = nationality)) +
-  geom_col()
-```
-
-```{r}
-astronauts %>%
-  filter(nationality %in% c("U.S.", "U.S.S.R/Russia", "U.S.S.R/Ukraine")) %>%
+```{r spacecraft-type}
+spacecrafts <- astronauts %>%
+  mutate(nationality = ifelse(str_detect(nationality, "U.S.S.R"), "U.S.S.R/Russia", nationality)) %>%
+  filter(nationality %in% c("U.S.", "U.S.S.R/Russia")) %>%
   extract(ascend_shuttle,
           into = "ascent_spacecraft",
           regex = "([A-Za-z]+)[\\s-]?",
           remove = FALSE) %>%
   mutate(
     ascent_spacecraft = case_when(
-      ascent_spacecraft == "STS" ~ "Space Shuttle (STS)",
+      ascent_spacecraft == "STS" ~ "Space Shuttle",
       ascent_spacecraft == "MA" ~ "Mercury",
       ascent_spacecraft == "ASTP" ~ "Apollo-Soyuz (ASTP)",
       TRUE ~ str_to_title(ascent_spacecraft))
     ) %>%
   group_by(year_of_mission, ascent_spacecraft, nationality) %>%
   summarise(astronauts = n()) %>%
-  ungroup() %>%
-  mutate(ascent_spacecraft = fct_reorder(ascent_spacecraft, year_of_mission, min)) %>%
-  ggplot(aes(year_of_mission, ascent_spacecraft, colour = nationality, size = astronauts)) +
-  geom_point(position = position_dodge(width = 0.5))
+  ungroup()
+
+p <- spacecrafts %>%
+  filter(ascent_spacecraft != "Apollo-Soyuz (ASTP)") %>%
+  mutate(ascent_spacecraft = fct_reorder(ascent_spacecraft, year_of_mission, max)) %>%
+  ggplot(aes(ascent_spacecraft, year_of_mission, colour = nationality, size = astronauts)) +
+  geom_line(position = position_dodge(width = 0.8), alpha = 0.8) +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(1960, 2020, by = 5)) +
+  scale_size(range = c(1, 26)) +
+  scale_colour_manual(values = c("#033a92", "#ee123f")) +
+  labs(title = "3... 2... 1... Liftoff!",
+       subtitle = "Number of <span style = 'color:#ee123f;'>**Cosmonauts**</span> vs. <span style = 'color:#033a92;'>**Astronauts**</span> by spacecraft type",
+       x = NULL,
+       y = "",
+       caption = "Source: Corlett, Stavnichuk, and Komarova (2020) | Visualization: @alexcookson") +
+  theme(legend.position = "none",
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "white", size = 0.2, linetype = 3),
+        plot.title = element_text(size = 32),
+        plot.subtitle = element_textbox_simple(size = 24),
+        plot.caption = element_text(size = 8),
+        text = element_text(family = "Nasalization Rg", colour = "white"),
+        axis.text = element_text(family = "Nasalization Rg", colour = "white", size = 16),
+        plot.background = element_rect(fill = "#090a11"),
+        panel.background = element_rect(fill = "#090a11", colour = NA))
+
+ggsave("./2020/2020-07-14/cosmonauts-vs-astronauts.png", plot = p, dpi = 320, height = 10, width = 16)
 ```
-
-```{r}
-astronauts %>%
-  count(nationality, sort = TRUE)
-
-# TO DO: NEED FINER DISCRIMINATION OF NAUT TYPE -- THERE ARE ASTRONAUTS THAT SHOULD BE COSMONAUTS
-astronauts %>%
-  mutate(naut_type = case_when(str_detect(nationality, "U.S.S.R") ~ "cosmonaut",
-                               nationality == "China" ~ "taikonaut",
-                               TRUE ~ "astronaut"))
-```
-
-
-
-
