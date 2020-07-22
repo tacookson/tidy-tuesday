@@ -1,0 +1,123 @@
+---
+title: "NYC Squirrel Census"
+author: "Alex Cookson"
+date: "28/10/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(tidytext)
+library(textstem)
+
+theme_set(theme_light())
+
+nyc_squirrels <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-29/nyc_squirrels.csv")
+```
+
+```{r}
+nyc_squirrels %>%
+  add_count(primary_fur_color) %>%
+  group_by(primary_fur_color, n) %>%
+  summarise_at(vars(running:foraging), mean) %>%
+  ungroup() %>%
+  filter(!is.na(primary_fur_color)) %>%
+  gather("activity", "pct_doing", -primary_fur_color, -n) %>%
+  mutate(cases = n * pct_doing) %>%
+  nest(data = c(n, pct_doing, cases)) %>%
+  mutate(model = map(data, ~ prop.test(.$cases, .$n))) %>%
+  mutate(tidy_model = map(model, tidy)) %>%
+  unnest(tidy_model) %>%
+  unnest(data) %>%
+  mutate(activity = fct_reorder(str_to_title(activity), estimate)) %>%
+  ggplot(aes(activity, estimate, col = primary_fur_color)) +
+  geom_point(size = 2, position = position_dodge(width = 0.8)) +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high), position = position_dodge(width = 0.8)) +
+  coord_flip() +
+  expand_limits(y = 0) +
+  scale_colour_manual(values = c("#000000", "#d2691e", "#a9a9a9")) +
+  scale_y_continuous(labels = scales::percent_format(), breaks = seq(0, 0.5, 0.1)) +
+  guides(col = guide_legend(reverse = TRUE)) +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor = element_blank()) +
+  labs(title = "Do Central Park's Gray, Cinnamon, and Black squirrels behave differently?",
+       subtitle = "Using 95% binomial proportion confidence intervals",
+       x = "",
+       y = "% of squirrels doing that activity",
+       col = "Squirrel Colour")
+```
+
+Parsing description of "other interactions"
+
+```{r}
+nyc_squirrels %>%
+  filter(!is.na(other_interactions)) %>%
+  unnest_tokens(word, other_interactions) %>%
+  anti_join(stop_words, by = "word") %>%
+  mutate(lemma = lemmatize_words(word)) %>%
+  count(primary_fur_color, lemma, sort = TRUE) %>%
+  filter(!is.na(primary_fur_color)) %>%
+  group_by(primary_fur_color) %>%
+  top_n(5, n) %>%
+  ungroup() %>%
+  mutate(lemma = fct_reorder(lemma, n)) %>%
+  ggplot(aes(lemma, n)) +
+  geom_col() +
+  facet_wrap(~ primary_fur_color) +
+  coord_flip()
+```
+
+*Extremely* rudimentary structure for telling a little story of each squirrel observation
+
+```{r}
+### Story mode
+text1 <- "You are taking a "
+# shift
+text2 <- " stroll through Central Park when you spot a "
+# primary_fur_color
+text3 <- " squirrel "
+# location
+text4 <- ". It "
+# approaches, indifferent, runs_from
+text5 <- " and you watch it as it "
+# running, chasing, climbing, eating, foraging
+text6 <- ". It also "
+# other_interactions
+
+nyc_squirrels %>%
+  filter(!is.na(other_interactions)) %>%
+  sample_n(1) %>%
+  mutate(shift = ifelse(shift == "AM", "morning", "afternoon"),
+         location = ifelse(location == "Ground Plane", "on the ground", "in a tree"),
+         approaches = ifelse(approaches, "approaches you, looking for food,", ""),
+         indifferent = ifelse(indifferent, "is indifferent to your presence", ""),
+         runs_from = ifelse(runs_from, "runs away from you", ""),
+         running = ifelse(running, "runs", NA_character_),
+         chasing = ifelse(chasing, "chases other squirrels", NA_character_),
+         climbing = ifelse(climbing, "climbs", NA_character_),
+         eating = ifelse(eating, "eats", NA_character_),
+         foraging = ifelse(foraging, "forages", NA_character_),
+         activity_list = paste(running, chasing, climbing, eating, foraging, sep = ", "),
+         story_text = paste0(text1,
+                shift,
+                text2,
+                primary_fur_color,
+                text3,
+                location,
+                text4,
+                approaches,
+                indifferent,
+                runs_from,
+                text5,
+                activity_list,
+                text6,
+                other_interactions)) %>%
+  pull(story_text)
+```
+

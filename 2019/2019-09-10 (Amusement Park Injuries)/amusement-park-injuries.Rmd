@@ -1,0 +1,227 @@
+---
+title: "Amusement Park Injuries"
+author: "Alex Cookson"
+date: "10/09/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(scales)
+library(viridis)
+
+theme_set(theme_light())
+
+tx_injuries <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-10/tx_injuries.csv")
+
+safer_parks <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-10/saferparks.csv") %>%
+  mutate(acc_date = mdy(acc_date),
+         acc_month = floor_date(acc_date, "month"),
+         mechanical = replace_na(mechanical, 0),
+         op_error = replace_na(op_error, 0),
+         employee = replace_na(employee, 0),
+         device_category = str_replace(str_to_lower(device_category), "unknown", NA_character_)) %>%
+  filter(acc_date >= "2011-01-01",
+         acc_date < "2017-01-01")
+```
+
+How many people have been injured over time?
+
+```{r}
+safer_parks %>%
+  group_by(acc_month) %>%
+  summarise(injured = sum(num_injured, na.rm = TRUE)) %>%
+  ggplot(aes(x = acc_month, y = injured)) +
+  geom_col() +
+  labs(title = "What has the trend of injuries been from 2011-2016?",
+       subtitle = "Each line represents the 2011-2016 trend for a given month",
+       x = "",
+       y = "Number of Injuries")
+```
+
+What are the seasonal trends? Are more people being injured as time goes on?
+
+```{r}
+safer_parks %>%
+  mutate(year = year(acc_date),
+         month = month(acc_date, label = TRUE)) %>%
+  group_by(year, month) %>%
+  summarise(injured = sum(num_injured, na.rm = TRUE)) %>%
+  ggplot(aes(x = year, y = injured)) +
+  geom_line(col = "dark blue", size = 2) +
+  expand_limits(y = 0) +
+  facet_wrap(~ month, scales = "free_y") +
+  labs(title = "Are more people being injured in amusement parks over time?",
+       x = "",
+       y = "Number of Injuries")
+```
+
+Injury counts seem to be getting higher over time, with consistent increases across months.
+
+
+Where are these accidents taking place?
+
+```{r}
+safer_parks %>%
+  mutate(bus_type = fct_lump(bus_type, 6)) %>%
+  group_by(bus_type) %>%
+  summarise(injuries = sum(num_injured, na.rm = TRUE)) %>%
+  mutate(bus_type = fct_reorder(bus_type, injuries)) %>%
+  ggplot(aes(x = bus_type, y = injuries, fill = bus_type)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_viridis(discrete = TRUE, direction = -1) +
+  scale_y_continuous(label = comma_format()) +
+  theme(legend.position = "none") +
+  labs(title = "Where are accidents taking place?",
+       subtitle = "Source: Safer Parks, 2011-2016",
+       x = "",
+       y = "Number of Injuries")
+```
+
+```{r}
+safer_parks %>%
+  filter(!is.na(device_category)) %>%
+  mutate(device_category = str_to_title(device_category),
+         bus_type = fct_lump(bus_type, 5)) %>%
+  group_by(bus_type, device_category) %>%
+  summarise(injured = sum(num_injured, na.rm = TRUE)) %>%
+  ungroup() %>%
+  group_by(bus_type) %>%
+  top_n(6, injured) %>%
+  ungroup() %>%
+  mutate(device_category = tidytext::reorder_within(device_category, injured, bus_type)) %>%
+  ggplot(aes(x = device_category, y = injured, fill = bus_type)) +
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~ bus_type, scales = "free") +
+  scale_fill_viridis_d(direction = -1) +
+  tidytext::scale_x_reordered() +
+  scale_y_continuous(labels = comma_format()) +
+  theme(legend.position = "none") +
+  labs(title = "What were the most common rides people were injured on?",
+       subtitle = "Source: Safer Parks, 2011-2016",
+       x = "",
+       y = "Number of Injuries")
+```
+
+What are the words most associated with accident reports?
+
+```{r}
+library(tidytext)
+
+accident_words <- safer_parks %>%
+  select(acc_id, acc_date, acc_month, bus_type, device_category, device_type, acc_desc) %>%
+  unnest_tokens(word, acc_desc) %>%
+  anti_join(stop_words, by = "word") %>%
+  filter(! word %in% c("patron", "stated"))
+
+accident_words %>%
+  count(word, sort = TRUE) %>%
+  head(16) %>%
+  mutate(word = str_to_title(word),
+         word = fct_reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "What are the most common words used in accident reports?",
+       subtitle = "Among 8,326 accident reports",
+       x = "",
+       y = "Number of times mentioned")
+```
+
+Ouch! The top three action verbs associated with injuries are:
+1. Hit
+2. Slide
+3. Fell
+
+What's more, it looks like "head" is the body part most mentioned.
+
+Are certain words more likely to be associated with certain business types?
+
+```{r}
+accident_words %>%
+  count(bus_type, word) %>%
+  bind_tf_idf(word, bus_type, n) %>%
+  filter(n >= 3) %>%   # Many words only appear in accident reports once for a given device_category
+  arrange(-tf_idf) %>%
+  mutate(bus_type = fct_lump(bus_type, 5)) %>%
+  filter(!is.na(bus_type)) %>%
+  group_by(bus_type) %>%
+  top_n(3, wt = n) %>%
+  ungroup() %>%
+  mutate(word = str_to_title(word),
+         word = drlib::reorder_within(word, tf_idf, bus_type),
+         bus_type = fct_reorder(bus_type, -tf_idf, sum),
+         bus_type = fct_relevel(bus_type, "Other", after = 5)) %>%
+  ggplot(aes(x = word, y = tf_idf, fill = bus_type)) +
+  geom_col() +
+  scale_x_reordered() +
+  scale_fill_viridis(discrete = TRUE) +
+  coord_flip() +
+  facet_wrap(~ bus_type, scales = "free_y") +
+  theme(legend.position = "none") +
+  labs(title = "What words from accident report are more particular to a certain type of business?",
+       subtitle = "Using words with the top TF-IDF within a business type",
+       x = "",
+       y = "TF-IDF")
+```
+
+* Trampoline parks are more associated with injuries involving jumping, ankles, and landing
+* Family entertainment centres are more associated with karts
+* Water parks are more associated with tubes (inner tubes, presumably) and slides
+* We should avoid amusement parks, because they are slightly more associated with pain
+
+### Appendix
+
+Looked at individual rides with the most accident report in the tx_injuries dataset, but wasn't feeling the direction or preliminary results.
+
+Are there any rides to absolutely avoid in Texas?
+
+```{r}
+tx_injuries %>%
+  count(ride_name, name_of_operation, serial_no, sort = TRUE) %>%
+  mutate(ride_operation_name = paste0(ride_name, " (", name_of_operation, ")")) %>%
+  top_n(20, n) %>%
+  mutate(ride_operation_name = fct_reorder(ride_operation_name, n)) %>%
+  ggplot(aes(x = ride_operation_name, y = n, fill = name_of_operation)) +
+  geom_col() +
+  coord_flip() +
+  scale_y_continuous(breaks = 1:10) +
+  theme(legend.position = "none") +
+  labs(title = "AVOID THESE RIDES!",
+       subtitle = "Rides with the most injury reports associated with them")
+```
+
+Also looked at categorising words by part of speech, with the idea of looking at, e.g., *what* was injured vs. *how*.
+
+```{r}
+accident_words_detailed <- accident_words %>%
+  left_join(parts_of_speech, by = "word")
+
+accident_words_detailed %>%
+  group_by(pos) %>%
+  summarise(n = n()) %>%
+  ungroup() %>%
+  mutate(pct_of_total = n / sum(n)) %>%
+  arrange(-n)
+
+# ~10% of words couldn't be categorised. We will take a quick look at some examples.
+accident_words_detailed %>%
+  filter(is.na(pos)) %>%
+  select(word, pos) %>%
+  sample_n(10)
+
+accident_words_detailed %>%
+  filter(!is.na(pos)) %>%
+  mutate(pos = fct_lump(pos, 5))
+
+# Many words have been mapped to multiple parts of speech, resulting in duplication of words and uncertainty around what part of speech it actually represents in the description. This is getting into deeper NLP, which would get pretty involved, so we'll put it aside for now.
+```
