@@ -7,9 +7,27 @@ output: html_document
 
 ```{r setup}
 library(tidyverse)
+library(ggthemes)
+library(mapproj)
 
 penguins <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv')
 
 penguins_raw <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins_raw.csv')
+```
+
+
+```{r antarctica-map}
+library(ggplot2) # For graphing
+library(mapproj) # For the polar orthographic map projection
+library(ggthemes) # For theme_map()
+
+# Get geospatial data for Antarctica only
+antarctica <- map_data("world", region = "Antarctica")
+
+ggplot(antarctica, aes(long, lat, group = group)) +
+  geom_polygon(fill = "#506B8E") +
+  # This is where the magic happens
+  coord_map("ortho", orientation = c(-90, 0, 0)) +
+  theme_map()
 ```
 

@@ -1,0 +1,735 @@
+site_id,site_name,ccamlr_region,longitude_EPSG:4326,latitude_EPSG:4326
+ACTI,Active Reef (Active Sound),48.1,-55.874722,-63.390833
+ACUN,Acuna Island,48.2,-44.637,-60.7612
+ADAM,Adams Island,58.4.1,92.5486,-66.5459
+AILS,Ailsa Craig,48.2,-44.631,-60.78
+AITI,Aitcho Island Other,48.1,-59.777,-62.381
+AITK,Aitken Cove,48.2,-44.525,-60.738
+AKAR,Akarui Point,58.4.2,41.3901,-68.4999
+ALAS,Alasheyev Bight,58.4.2,46.109,-67.654
+ALCO,Alcock Island,48.1,-61.127,-64.24
+AMAN,Amanda Bay,58.4.2,76.83,-69.27
+AMBU,Ambush Bay,48.1,-55.393,-63.184
+AMPH,Amphibolite Point,48.2,-45.339,-60.684
+AMUN,Amundsen Bay,58.4.2,50.55,-66.78
+ANCH,Anchorage Island,48.1,-68.2089,-67.6042
+ANDS,Andersen Island,58.4.2,63.3572,-67.4353
+ANDR,Andresen Island Site 1,48.1,-66.649,-66.879
+ANDI,Andresen Island Site 2,48.1,-66.711,-66.875
+ANVS,Anvers Island South West (7 km south of Gerlache Island),48.1,-64.25,-64.66
+ARDL,Ardley Island,48.1,-58.933,-62.213
+ARMS,Armstrong Reef,48.1,-66.2117,-65.8919
+ARTH,Arthurson Ridge,88.1,158.5109,-69.3634
+ASPL,Aspland Island,48.1,-55.894,-61.468
+ASTD,Astrid,48.6,8.31,-69.95
+ASTR,Astrolabe Island,48.1,-58.683,-63.316
+ATKA,Atka,48.6,-8.13,-70.61
+AUST,Auster Islands,58.4.2,63.98,-67.39
+AVIA,Avian Island,48.1,-68.8855,-67.7732
+BACH,Bach Quartet,48.1,-58.028,-61.921
+BACK,Backer Islands,88.3,-102.5515,-74.4112
+BAIL,Baily Head (Deception Island),48.1,-60.506,-62.965
+BALA,Balaena Islands,58.4.1,111.0688,-66.0158
+BALD,Bald Head,48.1,-57.6048,-63.6302
+BARC,Barcroft Islands,48.1,-67.1397,-66.4575
+BARN,Barnard Point (Livingston Island),48.1,-60.338,-62.758
+AITC,Barrientos Island (Aitcho Islands),48.1,-59.7517,-62.4071
+BART,Barton Peninsula,48.1,-58.791,-62.224
+BEAG,Beagle Island,48.1,-54.6675,-63.4139
+BEAR,Bear Peninsula,88.2,-110.1917,-74.3922
+BEAU,Beaufort Island,88.1,166.8978,-76.9694
+BEAN,Beaufort Island North,88.1,166.881,-76.9288
+BEAV,Beaver Rocks,48.1,-59.362,-63.679
+BECH,Bechervaise Island,58.4.2,62.8167,-67.5833
+BELI,Bell Island,48.1,-61.9976,-64.2782
+BELL,Bell Point,48.1,-58.889,-62.119
+BENE,Beneden Head,48.1,-62.701,-64.7671
+BENT,Benten,58.4.2,39.25,-69.0417
+BERK,Berkley/Cameron,58.4.1,110.64,-66.2163
+BERN,Bernardo O'Higgins Station,48.1,-57.9,-63.3209
+BERT,Berthelot Islands (excl. Green Island),48.1,-64.112,-65.333
+BISC,Biscoe Point,48.1,-63.7775,-64.8114
+BLAI,Blaiklock Island,48.1,-66.9404,-67.5824
+BLAK,Blake Island,48.1,-59.0303,-63.649
+WHTY,Blakeney/Whitney,58.4.1,110.5573,-66.2457
+BOLI,Bolingen/Lichen Island,58.4.2,75.7474,-69.456
+BONG,Bongrain Point (Pourquoi Pas Island),48.1,-67.7319,-67.7233
+BOUD,Boudet Island,48.1,-64.152,-65.1834
+BOWM,Bowman Island,58.4.1,103.07,-65.16
+BOYE,Boyer Rocks,48.1,-59.0371,-63.58295
+BRAS,Brash Island,48.1,-54.914167,-63.386389
+BRAT,Brattstrand Bluff,58.4.2,76.9995,-69.2157
+BRIM,Brimstone Peak,48.1,-57.752451,-61.912407
+BRPW,Brimstone Peak (west),48.1,-57.7633,-61.918323
+BRIT,Brittannia's Figleaf,48.1,-55.213,-61.278
+BRIW,Brittannia's Figleaf West,48.1,-55.241,-61.278
+BROW,Brown Bluff,48.1,-56.905,-63.5222
+BSON,Brownson Islands,88.3,-103.636074,-74.168119
+ALMI,Brown Station,48.1,-62.870278,-64.895556
+BRUI,Bruce Island,48.1,-63.1158,-64.8956
+BRUC,Bruce Islands,48.2,-44.924,-60.683
+BRYC,Bryde Island Cliffs,48.1,-62.925833,-64.876389
+BRYE,Bryde Island East,48.1,-62.927222,-64.889722
+BRYS,Bryde Island South,48.1,-62.950833,-64.901111
+BUCH,Buchanan Point,48.2,-44.465,-60.691
+BUCK,Buckle Island,88.1,163.2871,-66.8908
+BUSK,Buskin Rocks,48.1,-55.149,-61.057
+BYER,Byers Peninsula,48.1,-61.066,-62.633
+BYEW,Byewater Point,48.1,-61.5021,-62.7528
+BPTS,Byewater Point (south),48.1,-61.526269,-62.774695
+HILL,Camp Hill,48.1,-57.847732,-63.675889
+ADAR,Cape Adare,88.1,170.1999,-71.3063
+ANDE,Cape Anderson,48.2,-44.601,-60.757
+ANNE,Cape Anne,88.1,169.85,-73.617
+ASTU,Cape Astrup,48.1,-63.182778,-64.710833
+CBAR,Cape Barne,88.1,166.24162,-77.578012
+BATT,Cape Batterbee,58.4.2,53.8129,-65.842
+BELS,Cape Belsham,48.1,-54.883,-61.096
+BENN,Cape Bennett,48.2,-45.236,-60.62
+BIEN,Cape Bienvenue,58.4.1,140.5252,-66.7203
+BRDM,Cape Bird Middle,88.1,166.4187,-77.230393
+BRDN,Cape Bird North,88.1,166.44589,-77.214483
+BRDS,Cape Bird South,88.1,166.379444,-77.259444
+BOWL,Cape Bowles,48.1,-54.091,-61.316
+BURD,Cape Burd,48.1,-57.129722,-63.650556
+BURK,Cape Burks,88.2,-136.829586,-74.750466
+CBEK,"Cape Colbeck, Edward VII Peninsula",88.2,-157.7,-77.14
+CONW,Cape Conway,48.1,-61.4224,-62.8415
+CCOE,Cape Conway (east),48.1,-61.424,-62.838
+CORN,Cape Cornish (NE Buckle),88.1,163.2139,-66.7031
+COTT,Cape Cotter,88.1,170.3122,-72.4045
+CROZ,Cape Crozier,88.1,169.32,-77.46
+DARN,Cape Darnley,58.4.2,69.7,-67.88
+CDAV,Cape Davis,88.1,163.5333,-66.65
+DENI,Cape Denison,58.4.1,142.6647,-67.0072
+EVEN,Cape Evensen (mainland),48.1,-65.683,-66.164
+EVER,Cape Evensen (offshore rocks),48.1,-65.720454,-66.157904
+GARY,Cape Garry,48.1,-62.258,-63.361
+GEDD,Cape Geddes,48.2,-44.59,-60.685
+CHAL,Cape Hallett,88.1,170.2142,-72.3179
+HANS,"Cape Hansen, Coronation Island",48.2,-45.584,-60.659
+CHNE,Cape Herschel (northeast),48.1,-60.986,-64.042
+CHSE,Cape Herschel (southeast),48.1,-61.033,-64.078
+HINO,Cape Hinode,58.4.2,42.6612,-68.1453
+HOOK,Cape Hooker,48.1,-61.963,-63.334
+HORS,Cape Hooker Rock (south),48.1,-61.982,-63.345
+CHUN,Cape Hunter,58.4.1,142.349,-66.963
+JAME,Cape James,48.1,-62.6979,-63.0903
+JONE,Cape Jones,88.1,169.2272,-73.2762
+JULE,Cape Jules,58.4.1,140.9189,-66.7438
+KATE,Cape Kater,48.1,-59.8471,-63.7742
+KJEL,Cape Kjellman,48.1,-59.4145,-63.7249
+LACH,Cape Lachman (James Ross Island),48.1,-57.784444,-63.782222
+LAUR,Cape Laure,48.1,-63.3492,-64.7667
+LEGU,Cape Leguillou,48.1,-59.843,-63.5427
+CLIN,Cape Lindsey,48.1,-55.48,-61.107
+LLOY,Cape Lloyd,48.1,-54.0103,-61.1298
+LOOK,Cape Lookout,48.1,-55.205,-61.278
+CMEL,Cape Melville,48.1,-57.58,-62.022
+MONA,Cape Monaco,48.1,-64.278164,-64.717138
+CMUR,Cape Murray,48.1,-61.6206,-64.3663
+NUTT,Cape Nutt,58.4.1,108.2127,-66.6352
+OMGA,Cape Omega,58.4.2,40.9833,-68.5667
+PHIL,Cape Phillips,88.1,169.6168,-73.0714
+PIGE,Cape Pigeon Rocks,58.4.1,143.894,-66.9334
+CROB,Cape Robertson,48.2,-44.84,-60.714
+ROCA,Cape Roca,48.2,-44.8167,-60.75
+ROGE,Cape Roget,88.1,170.59,-71.99
+ROQU,Cape Roquemaurel,48.1,-58.9652,-63.5486
+ROYD,Cape Royds,88.1,166.1639,-77.5545
+SHIR,Cape Shirreff,48.1,-60.7874,-62.4575
+SMIT,Cape Smith,48.1,-62.3,-62.8738
+TUXE,Cape Tuxen,48.1,-64.1178,-65.2667
+VALE,Cape Valentine,48.1,-54.651,-61.102
+CVIK,Cape Vik,48.2,-45.663,-60.655
+WAIT,Cape Waites,88.3,-103.451,-72.713
+WALL,Cape Wallace,48.1,-62.209,-63.233
+WABL,Cape Wallace Bluff (south),48.1,-62.2664,-63.2816
+WASH,Cape Washington,88.1,165.37,-74.64
+WHEA,Cape Wheatstone,88.1,170.2024,-72.6217
+WHIT,Cape Whitson,48.2,-44.544,-60.748
+CARL,Carlota Cove,48.1,-59.709059,-62.373443
+CARO,Caroline Bluff,48.1,-57.659,-61.911
+CBAY,Casey Bay,58.4.2,48.6565,-67.3774
+CAST,Castle Rock,48.1,-61.5814,-62.7886
+CASY,Casy Island,48.1,-57.5052,-63.2365
+CECI,Cecilia Island,48.1,-59.7285,-62.4128
+CHAB,"Chabrier Rock, Vaureal Peak",48.1,-58.2961,-62.1874
+CHAP,Chappel Island,58.4.1,110.4193,-66.1772
+CHAR,Charcot Island,88.3,-75.4074,-69.7617
+CHPT,Charles Point,48.1,-61,-64.236
+CHAT,Chatos Island,48.1,-69.152,-67.66
+CHEA,Cheal Point,48.2,-45.994,-60.633
+CHIC,Chick Islands,58.4.1,120.9934,-66.7918
+CHI1,Child Rocks Islands 1,58.4.2,63.2749,-67.4377
+CHI2,Child Rocks Islands 2,58.4.2,63.2824,-67.438
+CHI3,Child Rocks Islands 3,58.4.2,63.2715,-67.4387
+CCMP,Chinstrap Camp,48.1,-54.756,-61.156
+CHIN,Chinstrap Cove,48.1,-54.197,-61.245
+CHII,Chinstrap Islet,88.1,163.311,-66.925
+CHIS,Christine Island,48.1,-64.0236,-64.7946
+CHRI,Christoffersen Island,48.2,-45.035,-60.728
+CIER,Cierva Point,48.1,-60.96,-64.157
+CIPT,Cieslak Point,48.1,-58.655,-62.009
+CPTW,Cieslak Point (west),48.1,-58.689,-62.012
+CLAR,Clark Island,88.2,-105.193,-74.056
+CLPT,Claude Point,48.1,-62.6177,-64.116
+COBA,Cobalescou Island,48.1,-61.6499,-64.1795
+COCK,Cockburn Island,48.1,-56.8412,-64.2005
+COFF,Coffer Island,48.2,-45.138,-60.742
+COLB,Colbeck Archipelago Unnamed 1,58.4.2,61.0647,-67.3436
+CONC,Conception Point,48.2,-45.709,-60.512
+CONE,Cone Island,48.1,-69.1531,-67.6749
+CONF,Confusion Island,48.2,-45.636,-60.738
+CONI,Conical Island (Aviation Islands),88.1,158.7833,-69.2667
+CONT,Continental Rock,58.4.2,59.7964,-67.3997
+CORM,Cormorant Island,48.1,-63.9667,-64.7939
+CORP,Cormorant Point,48.2,-44.732,-60.756
+CRWL,Cornwallis Island,48.1,-54.4641,-61.0724
+CORI,Cornwall Island,48.1,-59.709,-62.3426
+CIOL,Coronation Island (other localities),48.2,-45.444,-60.665
+COUL,Coulman Island,88.1,169.61,-73.35
+CMID,Coulman Middle,88.1,169.8854,-73.4372
+CNOR,Coulman North,88.1,169.8401,-73.3822
+CSOU,Coulman South,88.1,169.8779,-73.5137
+CRAB,Crab Beach,48.1,-55.17,-61.246
+CRBA,Cresta Run Bay,48.1,-55.359,-61.236
+CROW,Crown Head,48.2,-45.326858,-60.624
+CHEC,Crown Head (east coast),48.2,-45.259,-60.627
+CRUZ,Cruzen Island,88.2,-140.3266,-74.7341
+CRYS,Crystal Hill,48.1,-57.745833,-63.649444
+CURZ,Curzon Islands,58.4.1,141.5669,-66.767
+CUVE,Cuverville Island,48.1,-62.626,-64.684
+DANC,Danco Island,48.1,-62.5938,-64.734
+DARB,Darbel Island,48.1,-65.9003,-66.3808
+DARX,Darboux Island,48.1,-64.215,-65.4028
+DARW,Darwin Island,48.1,-54.726,-63.437
+DAVE,Davey Point,48.1,-58.5302,-61.9689
+DBAY,Davis Bay,88.1,158.49,-69.35
+DAVI,Davis Island,58.4.1,108.4444,-66.6637
+DAWS,Dawson,48.5,-26.67,-76.02
+DECI,Decimal Point,48.1,-54.702,-61.097
+DEEI,Dee Island,48.1,-59.7836,-62.4229
+DELA,Delaite Island,48.1,-62.1881,-64.5643
+DEMS,Demas Rocks,48.1,-58.0333,-63.35
+DEMA,Demay Point,48.1,-58.4191,-62.2137
+DESC,Descazes Island,48.1,-67.3334,-67.3334
+DESO,Desolation Island,48.1,-60.3468,-62.4578
+DETA,Detaille Island,48.1,-66.7867,-66.8708
+DEVI,Devil Island,48.1,-57.2889,-63.7992
+DEPT,Devils Point,48.1,-61.1829,-62.6714
+DIBB,Dibble Glacier,58.4.1,134.79,-66.01
+DOLL,Dolleman,48.5,-60.43,-70.61
+DOME,Dome Island (Aviation Islands),88.1,158.7833,-69.2667
+DAMO,Dorian Bay/Damoy Point,48.1,-63.4968,-64.8149
+DOBE,Dorian Beacon,48.1,-63.511389,-64.811111
+DOU1,Douglas Islands 1,58.4.2,63.3893,-67.3803
+DOU2,Douglas Islands 2,58.4.2,63.3895,-67.3849
+DOWN,Downshire Cliffs,88.1,170.592,-71.5582
+DREA,Dream Island,48.1,-64.2256,-64.7254
+DREW,Dream Island West (Casey Islands),48.1,-64.253955,-64.729528
+DRES,Drescher,48.6,-19.34,-72.83
+DUFF,Duff Point (Greenwich Island),48.1,-60.033333,-62.45
+DUKE,Duke of York Island,88.1,170.0635,-71.6235
+DUND,Dundee Island,48.1,-55.966,-63.483
+DURO,Duroch Islands,48.1,-57.8903,-63.3033
+DURV,d'Urville Monument,48.1,-56.2944,-63.4267
+DUPT,Duthiers Point,48.1,-62.8179,-64.8049
+DUTH,Duthoit Point,48.1,-58.835,-62.307
+EADI,Eadie Island,48.1,-55.929,-61.482
+EAGL,Eagle Island,48.1,-57.489457,-63.659936
+EARL,Earle Island,48.1,-54.7833,-63.4833
+EGAR,East 2-3 km of Cape Garry,48.1,-62.2131,-63.3555
+ECAP,East Cape,48.2,-45.201,-60.633
+EMEI,East of Meier Point,48.2,-45.87,-60.62
+ECKE,Eckener Point,48.1,-61.6042,-64.4309
+EDEN,Eden Rocks,48.1,-55.7018,-63.4946
+EDMO,Edmonson Point,88.1,165.0666,-74.3167
+EDWI,Edwards Islands,88.3,-103.0057,-73.8701
+EDWA,Edwards Point,48.1,-59.4984,-62.4629
+EIP0,Elephant Island (north coast point 0),48.1,-55.145,-61.077
+EIP1,Elephant Island (north coast point 1),48.1,-55.113,-61.091
+EIP2,Elephant Island (north coast point 2),48.1,-55.087,-61.093
+EIP3,Elephant Island (north coast point 3),48.1,-55.074,-61.092
+EIP4,Elephant Island (north coast point 4),48.1,-55.067,-61.094
+EIP5,Elephant Island (north coast point 5),48.1,-55.057,-61.094
+ELPT,Elephant Point,48.1,-60.8573,-62.6924
+ELLI,Ellium Island,48.2,-44.871,-60.694
+EMER,Emerald Cove,48.1,-57.682158,-61.906208
+EMPE,Emperor Island,48.1,-68.71,-67.8647
+ENTE,Enterprise Island,48.1,-61.99966,-64.538484
+ENTR,Entrance Point,48.1,-60.5533,-62.9981
+ENTW,Entrance Point West,48.1,-60.562,-63.008
+ETNA,Etna Island,48.1,-55.179,-63.0948
+EXTE,Extension Reef,48.1,-66.121944,-65.9675
+EYRI,Eyrie Bay,48.1,-57.676667,-63.578333
+FALS,False Island Point (Vega Island),48.1,-57.3425,-63.927222
+FARI,False Ridge,48.1,-54.052,-61.283
+FRPT,False Round Point,48.1,-57.9893,-61.8983
+FARE,Farewell Rock,48.1,-61.0183,-63.8678
+FERG,Ferguslie Peninsula,48.2,-44.567,-60.693
+FERR,Ferrier Peninsula,48.2,-44.425,-60.715
+FILD,Fildes Peninsula (northwest side),48.1,-58.97,-62.173
+FISH,Fish Islands,48.1,-65.3611,-66.0275
+FITC,Fitchie Bay,48.2,-44.494,-60.714
+FIZK,Fizkin Island (islet northeast of Fizkin Island),48.1,-65.48,-65.514
+FLIE,Fliess Bay,48.1,-55.2412,-63.2045
+FLOR,Florence Rock,48.2,-44.622,-60.768
+FOLD,Fold Island,58.4.2,59.32,-67.32
+FORB,Forbes Glacier,58.4.2,62.2858,-67.5964
+FBER,Fortenberry,88.1,167.0789,-70.7662
+FORT,Fort Point (Greenwich Island),48.1,-59.58,-62.542
+FOYN,Foyn Harbor (Enterprise Island),48.1,-62.009167,-64.554167
+FRAM,Fram Islands,58.4.1,139.825,-66.637
+FRNC,Francais Rocks,48.1,-56.008571,-63.027691
+FRAN,Franklin Island,88.1,168.43,-76.18
+FRAE,Franklin Island East,88.1,168.4101,-76.1581
+FRAW,Franklin Island West,88.1,168.3383,-76.1618
+FRED,Fredriksen Island,48.2,-44.9901,-60.7326
+FURS,Fur Seal Point,48.1,-54.043,-61.218
+FYRC,Fyr Channel,48.2,-45.673,-60.729
+GALE,Galindez Island East,48.1,-64.2399,-65.2476
+GALS,Galindez Island South,48.1,-64.246,-65.252
+GAMP,Gam Point Area,48.1,-57.9546,-61.9227
+GAST,Gaston Islands,48.1,-61.827,-64.4848
+GEOR,Georges Point (Ronge Island),48.1,-62.6696,-64.6694
+GRIB,Georges Rib,48.1,-54.973,-61.157
+GERD,Gerd Island,48.2,-45.7437,-60.6574
+GERL,Gerlache Island,48.1,-64.214,-64.601
+GNEY,Gibbney Island,58.4.2,62.3205,-67.5543
+GIBA,Gibbon Bay,48.2,-45.214,-60.649
+GIBB,Gibbs Island,48.1,-55.6385,-61.471
+GIBS,Gibson Bay,48.1,-55.842,-63.318
+GING,Ginger Island,48.1,-68.6858,-67.7494
+GLAN,Glandaz Point,48.1,-63.9591,-65.0911
+GOLF,Golfcourse Point,48.1,-55.473,-61.128
+GOSL,Gosling Islands,48.2,-45.9178,-60.6406
+GOWC,Gosling Islands (west coast),48.2,-45.908,-60.64
+GOUL,Gould,48.5,-47.68,-77.71
+GOUR,Gourdin Island,48.1,-57.3074,-63.1969
+GOPT,Gourlay Point,48.2,-45.5863,-60.7309
+GRAP,Graptolite Island,48.2,-44.4621,-60.7159
+GREI,Green Island,48.1,-64.1487,-65.3236
+GREY,Grey Island,48.2,-45.0149,-60.7487
+GRIN,Grinder Rock,48.1,-61.4256,-63.966
+GUNN,Gunnerus,58.4.2,34.38,-68.75
+HALF,Half Moon Island,48.1,-59.918,-62.596
+HALY,Halley,48.5,-27.43,-75.54
+HPNE,Hall Peninsula (northeast),48.1,-61.241,-62.769
+HPSW,Hall Peninsula (southwest),48.1,-61.244,-62.775
+HANN,Hannah Point,48.1,-60.6134,-62.6545
+HBAY,Harald Bay,88.1,157.6894,-69.1977
+HARM,Harmony Point,48.1,-59.2425,-62.3064
+HARE,Harmony Point (east),48.1,-59.229,-62.304
+HASW,Haswell Island,58.4.1,93.01,-66.52
+HENN,Hennequin Point,48.1,-58.396,-62.124
+HENR,Henry Islands,58.4.1,120.6206,-66.8781
+HERO,Heroina Island,48.1,-54.6083,-63.3944
+HEYW,Heywood Island,48.1,-59.6854,-62.3174
+HIDD,Hidden Bay,48.1,-63.780278,-65.048889
+HOKU,Hokuro Cove,58.4.2,39.629,-69.213
+HOLD,Holdfast Point (mainland and offshore rocks),48.1,-66.5867,-66.7917
+MIDG,Hollin/Midgley,58.4.1,110.4036,-66.3259
+HOLL,Holl/O'Connor,58.4.1,110.4315,-66.4118
+HOPE,Hope Bay,48.1,-56.9978,-63.3972
+HORI,Horseshoe Island,48.1,-67.236389,-67.816111
+HOVG,Hovgaard Island,48.1,-64.1264,-65.1311
+HUMB,Humble Island,48.1,-64.0875,-64.7647
+HUMP,Humphries Heights,48.1,-63.8637,-65.0557
+HUNT,Hunt Island,48.1,-62.117,-64.333
+HURE,Hurd Peninsula (east),48.1,-60.379,-62.695
+HURW,Hurd Peninsula (west),48.1,-60.406,-62.674
+HUTB,Hut Bluff,48.1,-55.14,-61.219
+HYDR,Hydrurga Rocks,48.1,-61.6259,-64.1454
+IFOI,Ifo Island Area,58.4.1,139.728,-66.627
+INAC,Inaccessible Island,48.2,-46.7333,-60.5667
+INEX,Inexpressible Island,88.1,163.7287,-74.9009
+INTE,Intercurrence Island,48.1,-61.416,-63.933
+SGUE,Island south of Guesalaga Island,48.1,-61.999,-64.282
+IOLB,Isles of Litwin Bay,48.1,-58.569,-61.99
+LAVO,Islet 1 km west of Lavosier Island,48.1,-66.829,-66.122
+LAKT,Islet next to Laktionov Island,48.1,-65.789737,-65.758531
+LEPP,Islet south of Le Petit Prince,48.1,-58.021,-61.911
+IVAN,Ivanhoff Head,58.4.1,109.1276,-66.8803
+JACO,Jacobs Ladder,48.1,-54.737,-61.152
+JACP,Jacques Peak,48.1,-61.8342,-64.5152
+JADE,Jade Point,48.1,-57.5935,-63.6028
+JPTI,Jameson Point Islands,48.1,-62.2622,-63.2944
+JPTS,Jameson Point (south),48.1,-62.2524,-63.3079
+JPTV,Jameson Point (vicinity),48.1,-62.2583,-63.296
+JANE,Janet Rock,58.4.1,139.1651,-66.5698
+JAQU,Jaquinot Rocks,48.1,-58.421,-63.441
+JENN,Jenny Island,48.1,-68.383889,-67.729722
+JESS,Jessie Bay,48.2,-44.694,-60.719
+JING,Jingle Island,48.1,-65.3253,-65.4303
+JOHN,Johnson's Dock,48.1,-60.3675,-62.6604
+JONA,Jonassen Island,48.1,-56.6834,-63.5425
+JORG,Jorge Island,48.1,-59.7607,-62.3798
+JOUB,Joubin Islands,48.1,-64.3992,-64.7744
+JOUG,Jougla Point,48.1,-63.4932,-64.827
+JUAN,Juan Carlos I Station,48.1,-60.383,-62.65
+KAYR,Kay Rock,48.1,-60.935,-64.126
+KELL,Kellick Island,48.1,-58.3928,-61.9186
+KETL,Ketley Point,48.1,-62.7631,-64.7066
+KIDS,Kidson Island,58.4.2,61.187,-67.2144
+KING,King Point,48.1,-55.481,-63.16
+KIRB,Kirby Head,58.4.2,46.5372,-67.2726
+KIRT,Kirton/Macklin,58.4.2,63.6378,-67.4907
+KITC,Kitchen Point,48.1,-59.347,-62.387
+KLOA,Kloa Point,58.4.2,57.28,-66.64
+KNOB,"Knobble Head, Bransfield Island",48.1,-56.5694,-63.1619
+KOPA,Kopaitic Island,48.1,-57.91,-63.315
+KROG,Krogh Island (Islet North of NE coast of K.I.),48.1,-66.960104,-66.250738
+KUNO,Kuno Point,48.1,-67.1603,-66.3978
+KUZI,Kuzira Point,58.4.2,38.2667,-69.6
+LAAG,Laager Point,48.1,-61.146,-62.641
+LAFA,Lafarge Rocks,48.1,-57.549,-63.209
+LAGO,Lagotellerie Island,48.1,-67.4017,-67.8869
+LAIN,Lainez Point,48.1,-67.78,-67.695556
+LAIR,Lair Point,48.1,-61.0353,-62.615
+LAJA,Lajarte Island,48.1,-63.4752,-64.2357
+LARS,Larsen Island,48.2,-46.0777,-60.5955
+LAUF,Lauff Island,88.2,-126.7749,-73.2325
+LAUT,Lautaro Neck,48.1,-63.1027,-64.8285
+LAZA,Lazarev,48.6,15.55,-69.75
+LECO,Lecointe Island,48.1,-62.064722,-64.270278
+LEDD,Ledda Bay,88.2,-130.784,-74.228
+LEWI,Lewis Island,58.4.1,134.3849,-66.1051
+LIND,Lindblad Cove,48.1,-59.441111,-63.878611
+LSAY,Lindsay Islands,88.3,-103.1829,-73.6094
+LION,Lions Rump,48.1,-58.1229,-62.1331
+LITC,Litchfield Island,48.1,-64.0919,-64.7708
+LITW,Litwin Bay (southwest of Davey Point),48.1,-58.565,-61.987
+LLAN,Llano Point,48.1,-58.446,-62.176
+LOBO,Lobodon Island,48.1,-61.6009,-64.086
+LONG,Long Peninsula Island,58.4.2,78.324,-68.4163
+LOUB,Loubat Point,48.1,-63.9265,-65.0776
+LOVI,Lovill Bluff,88.2,-127.4361,-73.538
+LOWT,Low Tongue,58.4.2,61.9906,-67.5456
+LUIT,Luitpold,48.5,-33.6,-77.77
+MABE,Mabel Island,48.2,-44.701,-60.675
+MPTE,Macaroni Point (east),48.1,-60.543,-62.8987
+MPTW,Macaroni Point (west),48.1,-60.5833,-62.8991
+MACK,MacKellar Islands,58.4.1,142.65,-66.967
+MACO,Mackintosh Cove (east coast),48.2,-44.4912,-60.6851
+MADI,Madder Cliff Island,48.1,-56.499,-63.306
+MADD,Madder Cliff (Joinville Island),48.1,-56.4831,-63.2989
+MAHE,Maher Island,88.2,-127.0503,-73.1983
+MALL,Mallory Point,58.4.1,108.6433,-66.83
+MAME,Mame-zima,58.4.2,39.4833,-69.0167
+MAND,Mandible Cirque,88.1,169.25,-73.117
+MANS,Mansfield Point,48.2,-45.7333,-60.65
+MARA,Marambio Station Vicinity,48.1,-56.627222,-64.240556
+MARI,Mariholm,48.2,-45.693,-60.746
+MARR,Marr Bay (east coast),48.2,-44.527,-60.678
+MATH,Matthews Island,48.2,-45.155,-60.745
+MAWS,Mawson Coast (excl. Bechervaise Island),58.4.2,62.9406,-67.5563
+MCAL,McCall Point,48.1,-66.616667,-67.03
+MCDO,McDonald Point,58.4.2,59.6654,-67.3427
+MLGE,McLeod Glacier (east),48.2,-45.625,-60.721
+MLGW,McLeod Glacier (west),48.2,-45.6,-60.7
+MEDL,Medley Rocks,48.1,-56.036455,-62.996093
+MEGA,Megaptera Island,48.1,-60.806,-63.678
+MEHO,Meholmen Island,58.4.2,39.4788,-69.0254
+MEIE,Meier Point,48.2,-45.896,-60.636
+MELC,Melchior Islands,48.1,-62.962974,-64.312105
+MERR,Merritt Island,58.4.1,107.1565,-66.4588
+MERT,Mertz Glacier,58.4.1,146.62,-66.892
+METC,Metchnikoff Point,48.1,-62.5747,-64.041
+METH,Methuen Cove,48.2,-44.576,-60.751
+MICH,Michelsen Island,48.2,-45.0233,-60.7324
+MIDA,Midas Island,48.1,-61.1008,-64.1685
+MIER,Miers Bluff,48.1,-60.4282,-62.7167
+MBNE,Miers Bluff Cove (northeast),48.1,-60.431,-62.716
+MBNW,Miers Bluff (northwest),48.1,-60.431,-62.716
+MIKK,Mikkelsen Harbor (Trinity Island),48.1,-60.791,-63.9022
+MITC,Mitchell Cove (Robert Island),48.1,-59.639722,-62.394444
+MIZU,Mizukuguri Cove,58.4.2,39.614,-69.197
+MOEI,Moe Island,48.2,-45.691,-60.734
+MOLI,Molina Point (northeast tip of Lemaire Island),48.1,-62.853889,-64.8075
+MONR,Monroe Island,48.2,-46.0568,-60.5997
+MOPT,Monroe Point,48.1,-61.5162,-62.8112
+MONU,Monument Rocks,48.1,-60.9433,-64.017
+MOOT,Moot Point,48.1,-64.078,-65.2062
+MORE,Moreton Point,48.2,-46.0308,-60.6122
+MPNC,Moreton Point North Coast,48.2,-46.024,-60.61
+MBIS,Mount Biscoe,58.4.2,51.3275,-66.2209
+MGLE,Mount Gleadell,58.4.2,50.44,-66.941
+MRII,Mount Riiser-Larsen,58.4.2,50.5511,-66.7908
+MOYE,Moyes,48.2,-45.66,-60.732
+MUCK,Muckle Bluff,48.1,-54.86,-61.157
+MURR,Murray Islands,48.2,-44.524,-60.773
+MYAL,Myall/McMahon,58.4.2,45.7356,-67.6721
+NANC,Nancy Rock,48.1,-59.099,-62.23
+CRAG,Near Craggy Point (Sugarloaf Island),48.1,-54.186,-61.302
+RNVG,Near Ranvik Glacier,58.4.2,77.262724,-69.154027
+NEKO,Neko Harbor (Andvord Bay),48.1,-62.5327,-64.8383
+NELL,Nella/Thalla Islands,88.1,166.0873,-70.6136
+NEIS,Nelly Island,58.4.1,110.1782,-66.2294
+NEPT,Nelly Point,48.1,-54.775,-61.157
+NEWE,Newell Point,48.1,-59.52,-62.3374
+NIGG,Nigg Rock,48.2,-44.864,-60.707
+NOBL,Noble Rocks,48.1,-63.4335,-64.7849
+NOKK,Nokkelholmane Islands,58.4.2,39.4635,-69.3811
+NCAP,North Cape (d'Urville Island),48.1,-56.489,-62.974
+NESM,Northeast of Smiggers Island,48.1,-65.346483,-65.451571
+NORF,Northern Foothills (Terra Nova Bay),88.1,164,-74.75
+NFOR,North Foreland,48.1,-57.688,-61.8928
+NCOI,North of Cornwall Island,48.1,-59.702,-62.33
+NHAM,North of Hammer Point,48.1,-59.624,-62.33
+HEYN,North of Heywood Island,48.1,-59.66,-62.312
+NMED,North of Medley Rocks,48.1,-55.9771,-62.9969
+NTAY,North of Taylor Point,48.1,-57.648,-61.919
+NOPT,North Point,48.2,-45.626,-60.672
+NVEG,North Vega Island,48.1,-57.226,-63.8053
+NWPO,Northwest coast of Pomona Plateau,48.2,-45.96,-60.544
+NWSP,Northwest of Spert Island,48.1,-60.9597,-63.8225
+NORW,Norway Bight,48.2,-45.816,-60.616
+NOVI,Noville Peninsula,88.3,-98.45,-71.77
+OBRI,O'Brien Island,48.1,-55.956,-61.507
+ODBE,Odbert Island,58.4.1,110.5421,-66.3742
+ORCW,Offshore Rocks off Cape Wallace,48.1,-62.228,-63.235
+OLDH,Oldham Island,58.4.2,61.7253,-67.5208
+OLIC,Oliphant Channel,48.2,-45.592,-60.729
+OLII,Oliphant Islands,48.2,-45.594,-60.736
+ONEI,O'Neill Point,48.1,-63.090132,-64.81622
+ONGU,Ongulkaven,58.4.2,39.4252,-69.0171
+ORNE,Orne Islands,48.1,-62.673,-64.662
+ORRO,Ornen Rocks,48.1,-57.566,-62.009
+OUTE,Outer Island,48.2,-45.5806,-60.7069
+OWEN,Owen Island,48.1,-58.3886,-61.9332
+PAGE,Pageant Point,48.2,-45.5843,-60.7286
+PALA,Palaver Point,48.1,-61.759,-64.1486
+PAND,Pandemonium Point,48.2,-45.648,-60.736
+PANT,Pantomime Point,48.2,-45.5833,-60.7266
+PABE,Paradise Harbor Beacon (Paradise Bay),48.1,-62.9311,-64.9111
+PATE,Patella Island,48.1,-55.5238,-63.1294
+PAPT,Patelnia Point,48.1,-58.472,-62.235
+PAUL,Paulet Island,48.1,-55.7881,-63.5801
+PEIN,Peine Island (Comb Island),48.1,-54.717,-63.411
+PENG,Penguin Island,48.1,-57.9269,-62.102
+PLDR,Penguin Ladder,48.1,-54.72,-61.143
+PEPO,Penguin Point (Seymour Island),48.1,-56.7114,-64.3061
+PERS,Persson Island,48.1,-58.4,-64.2
+PIIS,Peter I Island,88.3,-90.4917,-68.835
+PETE,Petermann Island,48.1,-64.137,-65.176
+PSON,Peterson Bank,58.4.1,110.23,-65.92
+PISL,Peterson Island,58.4.1,110.4993,-66.4665
+PKUP,Pickup Point,48.1,-54.645,-61.116
+PILL,Pillar Ridge,48.1,-54.222,-61.271
+PING,Pinguino Island,48.1,-60.9857,-64.1435
+PPPT,Pink Pool Point,48.1,-54.079,-61.309
+PIRI,Pirie Peninsula,48.2,-44.662,-60.69
+PLAT,Plato Island (Platter Island),48.1,-54.6742,-63.433
+PLEN,Pleneau Island,48.1,-64.0556,-65.104
+PGEO,Point Geologie,58.4.1,140.01,-66.67
+MART,Point Martin,48.2,-44.7185,-60.7709
+OBEL,Point Obelisk (James Ross Inland),48.1,-58.450833,-64.127222
+PRAE,Point Rae,48.2,-44.633,-60.757
+PTHO,Point Thomas,48.1,-58.4615,-62.1631
+WILD,Point Wild,48.1,-54.861,-61.098
+PTWD,Point Wordie,48.1,-55.328,-61.245
+POMO,Pomona Plateau Northwest coast,48.2,-45.96,-60.544
+POPT,Portal Point,48.1,-61.761111,-64.501944
+PCHA,Port Charcot,48.1,-64.026,-65.067
+PORT,Porteous Point,48.2,-45.675,-60.724
+LOCK,Port Lockroy,48.1,-63.484,-64.8231
+PMAR,Port Martin,58.4.1,141.3997,-66.8113
+POSS,Possession Island,88.1,171.1692,-71.8946
+POPO,Pottinger Point,48.1,-58.3582,-61.9325
+POWE,Powell Island,48.2,-45.029,-60.725
+PRES,President Head (Snow Island),48.1,-61.2001,-62.7255
+PRIE,Priest Island (Peltier Channel),48.1,-63.502222,-64.858889
+PRIM,Prime Head,48.1,-57.305,-63.2129
+PRIN,Principal Point,48.1,-63.431,-64.9121
+PROC,Proclamation Island,58.4.2,53.6876,-65.8424
+NPRO,Promontories on north-central coast,48.1,-62.075,-63.25
+PROS,Prospect Point,48.1,-65.338333,-66.008889
+PURD,Purdy Point,48.2,-45.4333,-60.5333
+PYPT,Py Point,48.1,-63.5974,-64.8792
+PYRI,Pyrites Island,48.1,-57.9491,-61.9241
+QPTM,Quinton Point (middle),48.1,-63.683056,-64.335278
+QPTN,Quinton Point (north),48.1,-63.636667,-64.314444
+QPTS,Quinton Point (south),48.1,-63.685,-64.346389
+RAGN,Ragnhild,48.6,27.15,-69.9
+RAUE,Rauer Islands,58.4.2,77.6765,-68.8331
+RAYN,Rayner Point,48.2,-45.191,-60.648
+REDI,Red Island,48.1,-57.88,-63.7356
+RRRI,Red Rock Ridge,48.1,-67.1686,-68.2878
+RENI,Renier Point,48.1,-59.81,-62.609
+RETU,Return Point,48.2,-46.0328,-60.6266
+RHYO,Rhyolite Island,48.1,-68.5709,-69.6488
+RIDL,Ridley Island,48.1,-58.016,-61.85
+RIIS,Riiser,48.6,-15.11,-72.12
+RIPP,Rip Point,48.1,-59.001,-62.235
+ROBB,Robbery Beaches,48.1,-61.083,-62.616
+ROBE,Robert Point (Robert Island),48.1,-59.383,-62.45
+RBSN,Robinson,58.4.2,63.4596,-67.4543
+RONW,Robinson (northwest),58.4.2,63.413,-67.4489
+ROSE,Robinson (southeast),58.4.2,63.4956,-67.4749
+RAND,Rocks near Andersson Island,48.1,-56.4856,-63.5603
+ROME,Romeo Island,48.1,-59.9268,-62.3763
+RONE,Ronge Island East,48.1,-62.6436,-64.6884
+ROOK,Rookery Islands,58.4.2,62.5099,-67.6044
+ROWE,Rowett Island,48.1,-55.2141,-61.2852
+RUDM,Rudmose Rocks,48.2,-44.602,-60.676
+RUGG,Rugged Rocks,48.1,-59.816,-62.601
+RUMP,Rumpa Island,58.4.2,39.3905,-69.1441
+RUPE,Rupert Coast,88.2,-143.3,-75.38
+RZEP,Rzepeki Islands,48.1,-58.824,-62.099
+SABR,Sabrina Island,88.1,163.309,-66.9171
+SAPT,Saddleback Point,48.1,-54.901,-61.099
+SADD,Saddle Island,48.2,-44.855,-60.617
+SANA,Sanae,48.6,-1.42,-70
+SAND,Sandefjord Bay,48.2,-46.0367,-60.605
+SANE,San Eliado Point,48.1,-63.1166,-64.844
+SART,Sartorius Point,48.1,-59.6567,-62.5596
+SAXU,Saxum Nunatak,48.1,-56.0533,-63.1367
+SCUL,Scullin/Murray,58.4.2,66.6968,-67.7833
+SEAL,Seal Islands,48.1,-55.393,-60.975
+SEFB,SE Fisher Bay,58.4.1,146.0809,-67.5949
+SELV,Selvick Cove,48.1,-62.5691,-64.6405
+SENT,Sentry Rocks,88.1,167.4046,-70.7543
+SEPR,SE Promontory,88.1,163.05,-66.65
+SERA,Serac Point,48.1,-54.026,-61.177
+SHAC,Shackleton Ice Shelf,58.4.1,96.02,-64.86
+SHIS,Shag Island,48.1,-58.297,-62.185
+SHAG,Shagnasty Island,48.2,-45.618,-60.732
+SHEE,Sheelagh Islands,58.4.2,50.1804,-66.5464
+SHEI,Shepard Island,88.2,-132.5519,-74.3773
+SHEN,Sheppard Nunatak,48.1,-57.0154,-63.3629
+SHEP,Sheppard Point,48.1,-56.9844,-63.3707
+SHIL,Shilling Shelf,48.1,-54.735,-61.097
+SHIN,Shingle Cove (Coronation Island),48.2,-45.5636,-60.6469
+SHLY,Shirley/Beall,58.4.1,110.5,-66.283
+SHUM,Shumskiy Cove,48.1,-67.3525,-67.072778
+SIFF,Siffrey Point,48.1,-57.222222,-63.221944
+SIGA,Sigaren,58.4.2,39.4344,-69.1693
+SIMS,Sims Island,88.3,-78.5407,-73.2725
+SKIL,Skilling Island (north coast),48.2,-45.15,-60.7833
+SKOT,Skottsberg Point,48.1,-60.8089,-63.9205
+SMAL,Small Island,48.1,-61.4549,-64.0121
+SEGI,Small island southeast on Gerlache Island,48.1,-64.2038,-64.6037
+SMIG,Smiggers Island,48.1,-65.3514,-65.4597
+SMTH,Smith,48.5,-60.83,-74.37
+SMYL,Smyley,88.3,-78.83,-72.3
+SNOW,Snow Hill Island,48.1,-57.44,-64.52
+SOMI,South of Martin Islands,48.1,-65.3381,-65.6881
+SOTH,South of Tay Head,48.1,-55.6413,-63.3359
+SPBL,South Point Bluff,48.1,-60.6347,-63.0158
+SPNW,South Point Bluff (northwest),48.1,-60.6702,-63.0138
+SWIS,Southwest Island (Aviation Islands),88.1,158.7833,-69.2666
+SPUI,Spence Harbour and unnamed island,48.2,-45.169,-60.699
+SPER,Spert Island,48.1,-60.9778,-63.8614
+SPIG,Spigot Peak,48.1,-62.554,-64.635
+SPIP,Spigot Peak Point,48.1,-62.558,-64.625
+SPTR,Spigot Peak Tripod,48.1,-62.5622,-64.6358
+SPRO,Spindrift Rocks,48.2,-45.644,-60.683
+SPIN,Spine Island (Coronation Island),48.2,-46.0202,-60.594
+SPLI,Split Beach,48.1,-54.937,-61.156
+SPRI,Sprightly Islands Vicinity,48.1,-61.072,-64.283
+STAC,Stackpole Rocks,48.1,-60.9574,-62.678
+STCB,Stancomb,48.5,-23.09,-74.12
+STAN,Stanton Continental Rock,58.4.2,61.7175,-67.5342
+STUN,Stanton unnamed,58.4.2,61.5978,-67.5078
+STEE,Steepholm Islands,48.2,-45.15,-60.7833
+STEI,Steines Island,58.4.2,76.5825,-69.3412
+STEN,Stene Point,48.2,-45.707,-60.654
+STER,Sterneck Island,48.1,-60.9826,-64.201
+STIG,Stigant Point,48.1,-58.7185,-62.023
+STOK,Stoker Island,48.1,-59.85,-62.4
+STON,Stonington Island,48.1,-66.997005,-68.186076
+STRA,Stranger Point,48.1,-58.6161,-62.26
+STUR,Sturge Island,88.1,164.633,-67.467
+SVEN,Sven Foyn Island,88.1,171.0695,-71.956
+SVIS,Svenner Islands,58.4.2,76.8346,-69.0341
+TART,Tartar Point,48.1,-58.423,-61.937
+TAYH,Tay Head (Joinville Island),48.1,-55.5508,-63.3486
+TAYG,Taylor Glacier,58.4.2,60.88,-67.45
+TAYL,Taylor Point,48.1,-57.642,-61.933
+TELE,Telefon Bay (Deception Is),48.1,-60.664444,-62.923611
+TENM,Tenmondai Rock,58.4.2,41.701,-68.4445
+TETR,Tetrad Islands,48.1,-60.734,-63.918
+GREE,The Green Glen,48.1,-55.266,-61.271
+TTOE,The Toe,48.1,-59.1669,-62.3277
+TTUR,The Turret,48.2,-45.166,-60.67
+THOR,Thorgaut,58.4.2,63.5433,-67.4425
+TWGI,Three islands west of Gerlache Island,48.1,-64.2471,-64.5921
+TSIS,Three Sisters,48.1,-57.9135,-62.0779
+THUN,Thunder Bay,48.1,-54.117,-61.312
+THUR,"Thurston Glacier, Mount Siple",88.2,-125.621,-73.5
+TICK,Tickell Head,48.2,-45.798,-60.528
+TORG,Torgersen Island,48.1,-64.0741,-64.7731
+TORI,Torinosu Cove,58.4.2,39.5667,-69.4833
+TOWE,Tower Island (east),48.1,-59.779,-63.591
+TOWW,Tower Island (west),48.1,-59.876,-63.56
+TRIA,Triangle Point,48.1,-59.839,-62.522
+TIEA,Trinity Island (east),48.1,-60.683,-63.883
+TINW,Trinity Island (northwest),48.1,-60.749,-63.711
+TISW,Trinity Island (southwest),48.1,-60.879,-63.9
+TIWE,Trinity Island (west),48.1,-60.829,-63.833
+TROW,Trowbridge Islands,48.1,-57.6304,-61.996
+TRUA,Truant Island,48.1,-63.407,-64.923
+TRUN,Trundle Island,48.1,-65.2885,-65.3938
+TRYN,Tryne Islands,58.4.2,78.4125,-68.3809
+TUPI,Tupinier Island,48.1,-58.2669,-63.3702
+TURR,Turret Point (King George Island),48.1,-57.9514,-62.0875
+TXRX,Tuxen Rocks,48.1,-64.1334,-65.2549
+TWIN,Twintits Stack,48.1,-55.402,-61.18
+HUMM,Two Hummock Island,48.1,-61.7033,-64.1362
+TPTN,Two points north of Cape Hooker,48.1,-61.951,-63.319
+UCHA,Uchatka Point,48.1,-58.439,-62.22
+UFSI,Ufs Island,58.4.2,61.1406,-67.4694
+UMBE,Umbeashi,58.4.2,43.01,-68.05
+UNGE,Unger Island (Unger Rock),88.1,166.919,-70.6811
+UNN2,Unnamed 2,58.4.2,63.5435,-67.4402
+UNN7,Unnamed 7,58.4.2,63.3336,-67.4475
+UICW,Unnamed island off Cape Wallace,48.1,-62.1783,-63.2322
+UIEL,Unnamed island off Elephant Point,48.1,-60.502,-62.6
+UIPN,Unnamed Island PE 2 North,58.4.2,77.7162,-68.9013
+SMAT,Unnamed islands (South of Matthews Island),48.2,-45.154,-60.742
+UIP1,Unnnamed Island PE 1,58.4.2,77.7506,-68.767
+UIP2,Unnnamed Island PE 2,58.4.2,77.736,-68.9012
+UIP3,Unnnamed Island PE 3,58.4.2,78.211,-68.4419
+URUG,Uruguay Island,48.1,-64.223056,-65.2325
+USEF,Useful Island,48.1,-62.864,-64.717
+VAIS,Valette Island,48.2,-44.622,-60.758
+VAPO,Vapour Col (Deception Island),48.1,-60.721,-62.992
+VERN,Vernadsky Station,48.1,-64.2567,-65.2453
+VESN,Vestfold North,58.4.2,78.0954,-68.4842
+VESS,Vestfold South,58.4.2,77.9227,-68.5883
+VIET,Vietor Rock,48.1,-61.0981,-62.6831
+VRNW,Vietor Rock (northwest),48.1,-61.1021,-62.6746
+VIEU,Vieugue Island,48.1,-65.2144,-65.6682
+VIEW,View Point,48.1,-57.372169,-63.542242
+VORT,Vortex Island,48.1,-57.6415,-63.7257
+WALK,Walker Point,48.1,-54.697,-61.143
+WATE,Waterboat Point,48.1,-62.8581,-64.8236
+WPEC,Watson Peninsula (east coast),48.2,-44.5436,-60.6761
+WPWC,Watson Peninsula (west coast),48.2,-44.551,-60.675
+WATT,Watt Bay,58.4.1,144.2854,-66.9949
+WAYA,Way Archipelago,58.4.1,143.5895,-66.8571
+WEBB,Webb Island,48.1,-67.925833,-67.447778
+WEDD,Weddell Island,48.2,-44.8479,-60.6359
+WEEK,Weeks Stack,48.1,-59.057,-62.234
+WELC,Welcome Point,48.1,-55.429,-61.134
+WELL,Weller Island,48.1,-65.3817,-65.4453
+MOSS,West coast of Mossman Peninsula,48.2,-44.753,-60.772
+WSAD,West of Saddleback Point (Penguin Island),48.1,-54.963,-61.106
+WHAL,Whalers Bay (Deception Is),48.1,-60.561715,-62.983232
+WIDE,Wideopen Islands,48.1,-55.8492,-63.0042
+WINW,Window Island,48.1,-61.1237,-62.5654
+WINK,Winkle Island (two islets next to Winkle Island),48.1,-65.686,-65.52
+WITH,Withem Island,48.1,-59.1381,-62.2352
+WOOD,Wood Bay,88.1,165.1332,-74.3299
+WOOI,Wood Island,48.1,-60.3042,-62.4841
+WORL,Worlds End,48.1,-57.996,-61.856
+WOPT,Worley Point,88.2,-132.777,-74.4057
+WYAT,Wyatt Earp Islands,58.4.2,78.5385,-68.3569
+YALO,Yalour Islands,48.1,-64.1564,-65.2389
+YANK,Yankee Harbor,48.1,-59.7687,-62.5257
+YOUN,Young Island,88.1,162.4,-66.4167
+YTRE,Ytrehovdeholmen,58.4.2,39.4333,-69.2167
+ZAWA,Zawadski Stacks,48.1,-58.784,-62.079
+ZEDI,Zed Island,48.1,-60.166,-62.433
+ZIGZ,Zig Zag Island,48.1,-59.8419,-63.6123
