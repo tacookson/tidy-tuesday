@@ -1,0 +1,15 @@
+---
+title: "palmer-penguins"
+author: "Alex Cookson"
+date: "27/07/2020"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+
+penguins <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins.csv')
+
+penguins_raw <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-28/penguins_raw.csv')
+```
+
