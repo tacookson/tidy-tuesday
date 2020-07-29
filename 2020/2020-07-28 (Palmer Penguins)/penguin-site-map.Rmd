@@ -1,0 +1,58 @@
+---
+title: "Antarctic Penguin Study Sites Map"
+author: "Alex Cookson"
+date: "2020-07-28"
+output: html_document
+---
+
+```{r setup, message = FALSE}
+library(dplyr) # For data wrangling
+library(readr) # For read_csv()
+library(ggplot2) # For graphing
+library(mapproj) # For graphing with the right map project
+```
+
+```{r site-list}
+# Set up temporary file
+temp <- tempfile()
+
+# Download from http://www.penguinmap.com/SiteList/
+download.file("http://www.penguinmap.com/SiteList/", temp)
+
+# Read CSV file of site list
+sites <- read_csv(temp) %>%
+  rename(long = `longitude_EPSG:4326`,
+         lat = `latitude_EPSG:4326`)
+```
+
+```{r antarctica-map, fig.align = 'center', fig.width = 10}
+# Get geospatial data for Antarctica
+antarctica <- map_data("world", region = "Antarctica")
+
+
+ggplot() +
+  # Graph Antarctic coastline in blue
+  geom_polygon(data = antarctica,
+               aes(long, lat, group = group),
+               fill = "#506B8E") +
+  # Add points for penguin study sites in red
+  geom_point(data = sites, aes(long, lat),
+             colour = "#C33C54",
+             size = 1) +
+  # Add grey box showing Palmer Peninsula (birthplace of Palmer Penguins!)
+  annotate("rect",
+           xmin = -50, xmax = -75, ymin = -75,  ymax = -60,
+           alpha = 0.25, col = "white") +
+  # Add text label for Palmer Peninsula
+  annotate("text",
+           x = -35, y = -68, label = "Palmer Peninsula",
+           fontface = "bold") +
+  # Set coordinates so that we look at Antarctica from the "bottom" of Earth
+  # This is known as a polar orthographic map projection
+  coord_map("ortho", orientation = c(-90, 0, 0)) +
+  # Use theme_void() to get rid of gridlines, borders, etc.
+  theme_void()
+```
+
+
+
