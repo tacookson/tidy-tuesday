@@ -46,13 +46,18 @@ ggplot() +
   # Add text label for Palmer Peninsula
   annotate("text",
            x = -35, y = -68, label = "Palmer Peninsula",
-           fontface = "bold") +
+           fontface = "bold", size = 7) +
   # Set coordinates so that we look at Antarctica from the "bottom" of Earth
   # This is known as a polar orthographic map projection
   coord_map("ortho", orientation = c(-90, 0, 0)) +
   # Use theme_void() to get rid of gridlines, borders, etc.
   theme_void()
 ```
+
+```{r save-image}
+ggsave("penguin-study-sites.png", width = 10, height = 10)
+```
+
 
 
 
