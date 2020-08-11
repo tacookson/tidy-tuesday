@@ -12,3 +12,12 @@ avatar <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tid
 scene_description <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-11/scene_description.csv')
 ```
 
+```{r eda}
+avatar %>%
+  distinct(book_num, chapter_num, chapter,  writer, imdb_rating) %>%
+  mutate(id = row_number()) %>%
+  ggplot(aes(id, imdb_rating, colour = as.factor(book_num))) +
+  geom_point() +
+  geom_line()
+```
+
