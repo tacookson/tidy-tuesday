@@ -1,0 +1,15 @@
+---
+title: "extinct-plants"
+author: "Alex Cookson"
+date: "17/08/2020"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+
+plants <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-18/plants.csv')
+actions <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-18/actions.csv')
+threats <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-18/threats.csv')
+```
+
