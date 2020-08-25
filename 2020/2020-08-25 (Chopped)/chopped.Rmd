@@ -1,0 +1,18 @@
+---
+title: "chopped"
+author: "Alex Cookson"
+date: "24/08/2020"
+output: html_document
+---
+
+```{r setup, warning = FALSE, message = FALSE}
+library(tidyverse)
+
+chopped <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-25/chopped.tsv')
+```
+
+```{r eda}
+chopped %>%
+  View()
+```
+
