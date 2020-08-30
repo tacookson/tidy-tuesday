@@ -13,6 +13,13 @@ chopped <- readr::read_tsv('https://raw.githubusercontent.com/rfordatascience/ti
 
 ```{r eda}
 chopped %>%
-  View()
+  group_by(season) %>%
+  mutate(season_avg_rating = mean(episode_rating, na.rm = TRUE)) %>%
+  ungroup() %>%
+  ggplot(aes(series_episode, episode_rating, colour = as.factor(season))) +
+  geom_point(size = 0.5) +
+  geom_line(aes(y = season_avg_rating),
+            size = 2) +
+  theme(legend.position = "none")
 ```
 
