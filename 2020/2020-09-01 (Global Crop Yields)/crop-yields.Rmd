@@ -18,6 +18,18 @@ arable_land <- readr::read_csv('https://raw.githubusercontent.com/rfordatascienc
 ```
 
 ```{r eda}
+tractors_clean <- tractors %>%
+  rename(entity = 1,
+         code = 2,
+         year = 3,
+         tractors_per_100_km2 = 4,
+         cereal_kg_per_hectare = 5,
+         population = 6)
 
+tractors_clean %>%
+  filter(entity == "Canada",
+         year > 1960) %>%
+  ggplot(aes(year, tractors_per_100_km2)) +
+  geom_point()
 ```
 
