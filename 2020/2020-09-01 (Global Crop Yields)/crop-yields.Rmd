@@ -17,9 +17,9 @@ land_use <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 arable_land <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-01/arable_land_pin.csv')
 ```
 
-```{r eda}
+```{r north-america-tractors}
 tractors_clean <- tractors %>%
-  rename(entity = 1,
+  rename(country = 1,
          code = 2,
          year = 3,
          tractors_per_100_km2 = 4,
@@ -27,9 +27,12 @@ tractors_clean <- tractors %>%
          population = 6)
 
 tractors_clean %>%
-  filter(entity == "Canada",
-         year > 1960) %>%
-  ggplot(aes(year, tractors_per_100_km2)) +
-  geom_point()
+  filter(country %in% c("Canada", "United States", "Mexico"),
+         !is.na(tractors_per_100_km2)) %>%
+  mutate(year = as.integer(year)) %>%
+  ggplot(aes(year, tractors_per_100_km2, colour = country)) +
+  geom_point() +
+  geom_line() +
+  theme(axis.text.x = element_text(hjust = 1, angle = 45))
 ```
 
