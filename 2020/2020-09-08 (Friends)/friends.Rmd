@@ -1,0 +1,31 @@
+---
+title: "friends"
+author: "Alex Cookson"
+date: "08/09/2020"
+output: html_document
+---
+
+```{r setup, warning = FALSE, message = FALSE}
+library(tidyverse)
+library(scales)
+
+theme_set(theme_minimal())
+
+friends <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends.csv')
+friends_emotions <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends_emotions.csv')
+friends_info <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends_info.csv')
+```
+
+```{r eda}
+friends_emotions %>%
+  count(season, episode, emotion, name = "utterances") %>%
+  group_by(season, episode) %>%
+  mutate(pct_utterances = utterances / sum(utterances)) %>%
+  ungroup() %>%
+  ggplot(aes(episode, pct_utterances, colour = emotion)) +
+  geom_line() +
+  geom_point() +
+  facet_grid(emotion ~ season) +
+  scale_y_continuous(labels = label_percent(accuracy = 1))
+```
+
