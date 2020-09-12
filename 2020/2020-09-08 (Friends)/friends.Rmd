@@ -29,3 +29,11 @@ friends_emotions %>%
   scale_y_continuous(labels = label_percent(accuracy = 1))
 ```
 
+```{r}
+friends_info %>%
+  mutate(episode_sequence = row_number()) %>%
+  ggplot(aes(episode_sequence, us_views_millions, colour = as.factor(season))) +
+  geom_point()
+```
+
+
