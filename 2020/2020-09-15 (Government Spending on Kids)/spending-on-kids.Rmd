@@ -1,0 +1,21 @@
+---
+title: "spending-on-kids"
+author: "Alex Cookson"
+date: "14/09/2020"
+output: html_document
+---
+
+```{r setup, warning = FALSE, message = FALSE}
+library(tidyverse)
+
+theme_set(theme_minimal())
+
+kids <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-15/kids.csv')
+```
+
+NOTE: Codebook available at https://jrosen48.github.io/tidykids/articles/tidykids-codebook.html
+
+```{r eda}
+kids
+```
+
