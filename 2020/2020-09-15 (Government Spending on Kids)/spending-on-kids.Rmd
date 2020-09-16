@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, warning = FALSE, message = FALSE}
 library(tidyverse)
+library(scales)
 
 theme_set(theme_minimal())
 
@@ -15,7 +16,25 @@ kids <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidyt
 
 NOTE: Codebook available at https://jrosen48.github.io/tidykids/articles/tidykids-codebook.html
 
-```{r eda}
-kids
+I'm interested in spending on libraries, since my wife is a librarian.
+
+```{r library-spend}
+library_spend <- kids %>%
+  filter(variable == "lib") %>%
+  transmute(state,
+            year,
+            spend = raw * 1000,
+            spend_inflation_adjusted = inf_adj * 1000,
+            spend_per_child_inflation_adjusted = inf_adj_perchild * 1000)
 ```
+
+```{r}
+library_spend %>%
+  filter(year == 2016) %>%
+  mutate(state = fct_reorder(state, spend_per_child_inflation_adjusted)) %>%
+  ggplot(aes(spend_per_child_inflation_adjusted, state)) +
+  geom_col() +
+  scale_x_continuous(labels = label_dollar())
+```
+
 
