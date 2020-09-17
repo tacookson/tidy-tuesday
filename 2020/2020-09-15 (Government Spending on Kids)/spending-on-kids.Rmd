@@ -12,7 +12,17 @@ library(scales)
 theme_set(theme_minimal())
 
 kids <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-15/kids.csv')
+
+# State population from National Park Visits dataset (https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-09-17)
+state_pop <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-09-17/state_pop.csv")
 ```
+
+```{r state-correspondence}
+# create correspondence between state abbreviations and names
+state_corr <- tibble(state = state.name,
+                     abbreviation = state.abb)
+```
+
 
 NOTE: Codebook available at https://jrosen48.github.io/tidykids/articles/tidykids-codebook.html
 
@@ -21,20 +31,62 @@ I'm interested in spending on libraries, since my wife is a librarian.
 ```{r library-spend}
 library_spend <- kids %>%
   filter(variable == "lib") %>%
+  left_join(state_corr, by = "state") %>%
+  left_join(state_pop, by = c("abbreviation" = "state", "year")) %>%
   transmute(state,
             year,
+            population = pop,
             spend = raw * 1000,
             spend_inflation_adjusted = inf_adj * 1000,
             spend_per_child_inflation_adjusted = inf_adj_perchild * 1000)
 ```
 
-```{r}
+```{r bar-graph}
 library_spend %>%
   filter(year == 2016) %>%
   mutate(state = fct_reorder(state, spend_per_child_inflation_adjusted)) %>%
   ggplot(aes(spend_per_child_inflation_adjusted, state)) +
   geom_col() +
-  scale_x_continuous(labels = label_dollar())
+  scale_x_continuous(labels = label_dollar()) +
+  labs(title = "Spending on libraries by state",
+       x = "Annual spend per child (inflation-adjusted)",
+       y = NULL)
 ```
+
+```{r}
+library_difference <- library_spend %>%
+  filter(year %in% c(1997, 2016)) %>%
+  select(state, year, spend_per_child_inflation_adjusted) %>%
+  pivot_wider(names_from = year, values_from = spend_per_child_inflation_adjusted) %>%
+  rename(start = `1997`,
+         end = `2016`) %>%
+  mutate(change = end - start,
+         direction = ifelse(change > 0, "increase", "decrease"))
+
+year_labels <- library_spend %>%
+  filter(year == 2016) %>%
+  left_join(state_corr, by = "state") %>%
+  mutate(abbreviation = ifelse(state == "District of Columbia", "DC", abbreviation))
+
+
+library_spend %>%
+  filter(year %in% c(1997, 2016)) %>%
+  left_join(library_difference, by = "state") %>%
+  mutate(state = fct_reorder(state, -change)) %>%
+  ggplot(aes(year, spend_per_child_inflation_adjusted)) +
+  geom_line(aes(group = state, colour = direction),
+            size = 1) +
+  geom_point(aes(group = desc(state), colour = direction),
+             size = 3) +
+  geom_text(data = year_labels,
+            aes(label = abbreviation),
+            nudge_x = 1.5) +
+  scale_x_continuous(breaks = c(1997, 2016)) +
+  scale_colour_manual(values = c("red", "grey")) +
+  labs(title = "Spend per child on libraries",
+       x = NULL,
+       y = "Spend per child")
+```
+
 
 
