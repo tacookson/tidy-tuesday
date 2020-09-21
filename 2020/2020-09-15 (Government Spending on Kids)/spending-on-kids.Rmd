@@ -77,11 +77,13 @@ library_spend %>%
   geom_line(aes(group = state, colour = direction),
             size = 1) +
   geom_point(aes(group = desc(state), colour = direction),
-             size = 3) +
+             size = 3,
+             alpha = 0.5) +
   geom_text(data = year_labels,
             aes(label = abbreviation),
             nudge_x = 1.5) +
   scale_x_continuous(breaks = c(1997, 2016)) +
+  scale_y_continuous(labels = label_dollar()) +
   scale_colour_manual(values = c("red", "grey")) +
   labs(title = "Spend per child on libraries",
        x = NULL,
