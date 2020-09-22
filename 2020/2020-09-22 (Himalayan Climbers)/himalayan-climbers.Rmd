@@ -1,0 +1,16 @@
+---
+title: "himalayan-climbers"
+author: "Alex Cookson"
+date: "22/09/2020"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+
+
+members <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-22/members.csv')
+expeditions <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-22/expeditions.csv')
+peaks <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-22/peaks.csv')
+```
+
