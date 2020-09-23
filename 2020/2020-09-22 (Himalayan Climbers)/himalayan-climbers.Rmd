@@ -5,12 +5,22 @@ date: "22/09/2020"
 output: html_document
 ---
 
-```{r}
+```{r setup, warning = FALSE, message = FALSE}
 library(tidyverse)
 
+theme_set(theme_minimal())
 
 members <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-22/members.csv')
 expeditions <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-22/expeditions.csv')
 peaks <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-22/peaks.csv')
+```
+
+```{r sex-ratio}
+members %>%
+  filter(!is.na(sex),
+         year >= 1970) %>%
+  ggplot(aes(year, fill = as.factor(sex))) +
+  geom_bar(position = "fill") +
+  facet_wrap(~ hired)
 ```
 
