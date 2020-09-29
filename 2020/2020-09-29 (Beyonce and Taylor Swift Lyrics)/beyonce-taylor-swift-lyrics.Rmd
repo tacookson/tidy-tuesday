@@ -1,0 +1,41 @@
+---
+title: "beyonce-taylor-swift-lyrics"
+author: "Alex Cookson"
+date: "28/09/2020"
+output: html_document
+---
+
+```{r setup, warning = FALSE, message = FALSE}
+library(tidyverse)
+library(tidytext)
+
+theme_set(theme_minimal())
+
+beyonce_lyrics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-29/beyonce_lyrics.csv')
+taylor_swift_lyrics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-29/taylor_swift_lyrics.csv')
+sales <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-29/sales.csv')
+charts <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-29/charts.csv')
+```
+
+```{r beyonce-eda}
+beyonce_lyrics %>%
+  distinct(line) %>%
+  unnest_tokens(word, line) %>%
+  anti_join(stop_words) %>%
+  # Make sure there is at least one alphabetic character (i.e., no numbers)
+  filter(str_detect(word, "[A-Za-z]")) %>%
+  count(word, sort = TRUE)
+```
+
+```{r taylor-swift-eda}
+taylor_swift_lyrics %>%
+  separate_rows(Lyrics, sep = "\\n") %>%
+  distinct(Lyrics) %>%
+  unnest_tokens(word, Lyrics) %>%
+  anti_join(stop_words) %>%
+  # Make sure there is at least one alphabetic character (i.e., no numbers)
+  filter(str_detect(word, "[A-Za-z]")) %>%
+  count(word, sort = TRUE)
+```
+
+
