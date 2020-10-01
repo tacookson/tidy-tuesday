@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, warning = FALSE, message = FALSE}
 library(tidyverse)
 library(tidytext)
+library(topicmodels)
 
 theme_set(theme_minimal())
 
@@ -17,25 +18,55 @@ sales <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidy
 charts <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-29/charts.csv')
 ```
 
+```{r sentiment-dictionary}
+nrc_sentiments <- get_sentiments("nrc")
+```
+
+
 ```{r beyonce-eda}
-beyonce_lyrics %>%
-  distinct(line) %>%
+beyonce_words <- beyonce_lyrics %>%
+  distinct(song_name, line) %>%
   unnest_tokens(word, line) %>%
   anti_join(stop_words) %>%
   # Make sure there is at least one alphabetic character (i.e., no numbers)
   filter(str_detect(word, "[A-Za-z]")) %>%
-  count(word, sort = TRUE)
+  left_join(nrc_sentiments, by = "word")
 ```
 
 ```{r taylor-swift-eda}
 taylor_swift_lyrics %>%
   separate_rows(Lyrics, sep = "\\n") %>%
-  distinct(Lyrics) %>%
+  distinct(Title, Lyrics) %>%
   unnest_tokens(word, Lyrics) %>%
   anti_join(stop_words) %>%
   # Make sure there is at least one alphabetic character (i.e., no numbers)
   filter(str_detect(word, "[A-Za-z]")) %>%
-  count(word, sort = TRUE)
+  inner_join(nrc_sentiments, by = "word") %>%
+  count(Title, sentiment, sort = TRUE) %>%
+  group_by(Title) %>%
+  mutate(pct_sentiment = n / sum(n)) %>%
+  ungroup() %>%
+  filter(Title %in% sample(unique(Title), 12),
+         sentiment %in% c("joy", "sadness")) %>%
+  ggplot(aes(pct_sentiment, sentiment)) +
+  geom_col() +
+  facet_wrap(~ Title)
+```
+
+```{r beyonce-bigrams}
+beyonce_lyrics %>%
+  distinct(song_name, line) %>%
+  unnest_tokens(word, line, token = "ngrams", n = 2) %>%
+  separate(word, into = c("word1", "word2"), extra = "drop") %>%
+  filter(!(word1 %in% stop_words$word),
+         !(word2 %in% stop_words$word),
+         word1 != word2,
+         !word1 %in% c("hey", ""),
+         !word2 %in% c("hey", "")) %>%
+  unite(bigram, word1, word2, sep = " ") %>%
+  filter(!is.na(bigram)) %>%
+  distinct(song_name, bigram) %>%
+  count(bigram, sort = TRUE)
 ```
 
 
