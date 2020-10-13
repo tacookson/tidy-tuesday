@@ -1,0 +1,24 @@
+---
+title: "datasaurus-dozen"
+author: "Alex Cookson"
+date: "13/10/2020"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+library(gganimate)
+
+datasaurus <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-10-13/datasaurus.csv')
+```
+
+```{r eda}
+datasaurus %>%
+  ggplot(aes(x, y, group = dataset)) +
+  geom_point() +
+  transition_states(states = dataset) +
+  ease_aes() +
+  labs(title = "{closest_state}")
+```
+
+
