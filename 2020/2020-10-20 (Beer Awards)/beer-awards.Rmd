@@ -12,6 +12,7 @@ beer_awards <- readr::read_csv('https://raw.githubusercontent.com/rfordatascienc
 ```
 
 ```{r eda}
-
+beer_awards %>%
+  summary()
 ```
 
