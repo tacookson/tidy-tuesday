@@ -1,0 +1,30 @@
+---
+title: "canadian-wind-turbines"
+author: "Alex Cookson"
+date: "27/10/2020"
+output: html_document
+---
+
+```{r setup, warning = FALSE, message = FALSE}
+library(tidyverse)
+library(ggthemes)
+library(gganimate)
+
+wind_turbine <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-10-27/wind-turbine.csv')
+```
+
+```{r eda}
+p <- wind_turbine %>%
+  mutate(commission_year = parse_number(commissioning_date)) %>%
+  ggplot(aes(longitude, latitude, group = objectid)) +
+  borders(regions = "Canada") +
+  geom_point() +
+  coord_map() +
+  theme_map() +
+  transition_reveal(along = commission_year,
+                    range = c(1992, 2020)) +
+  labs(title = "Year: {round(frame_along, 0)}")
+
+animate(p, start_pause = 15, end_pause = 15)
+```
+
