@@ -13,18 +13,36 @@ library(gganimate)
 wind_turbine <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-10-27/wind-turbine.csv')
 ```
 
-```{r eda}
-p <- wind_turbine %>%
-  mutate(commission_year = parse_number(commissioning_date)) %>%
-  ggplot(aes(longitude, latitude, group = objectid)) +
-  borders(regions = "Canada") +
-  geom_point() +
-  coord_map() +
-  theme_map() +
-  transition_reveal(along = commission_year,
-                    range = c(1992, 2020)) +
-  labs(title = "Year: {round(frame_along, 0)}")
+```{r}
+ontario_turbines <- wind_turbine %>%
+  filter(province_territory == "Ontario") %>%
+  group_by(project_name,
+           year = parse_number(commissioning_date)) %>%
+  summarise(longitude_centroid = mean(longitude),
+            latitude_centroid = mean(latitude),
+            turbines = n(),
+            capacity = mean(total_project_capacity_mw)) %>%
+  ungroup()
 
-animate(p, start_pause = 15, end_pause = 15)
+p <- ontario_turbines %>%
+  arrange(year) %>%
+  ggplot(aes(longitude_centroid,
+             latitude_centroid,
+             size = capacity,
+             group = project_name)) +
+  geom_point(alpha = 0.8,
+             shape = 16,
+             colour = "#4d5b6a",
+             fill = "#4d5b6a",
+             show.legend = FALSE) +
+  coord_map(projection = "lambert", lat0 = 49, lat1 = 77) +
+  theme_map() +
+  transition_time(time = year,
+                  range = c(1991, 2019)) +
+  shadow_mark() +
+  labs(title = "Year: {round(frame_time, 0)}") +
+  theme(plot.background = element_rect(fill = "#f7f3e8"))
+
+animate(p, nframes = 290, start_pause = 15, end_pause = 40)
 ```
 
