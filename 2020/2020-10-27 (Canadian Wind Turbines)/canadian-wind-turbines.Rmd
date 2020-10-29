@@ -14,6 +14,8 @@ library(gganimate)
 wind_turbine <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-10-27/wind-turbine.csv')
 ```
 
+Shapefile source: https://www12.statcan.gc.ca/census-recensement/alternative_alternatif.cfm?l=eng&dispext=zip&teng=lpr_000b16a_e.zip&k=%20%20%20%2027960&loc=http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/files-fichiers/2016/lpr_000b16a_e.zip
+
 ```{r ontario-shapefile}
 ontario_borders <- read_sf("./2020/2020-10-27 (Canadian Wind Turbines)/lpr_000b16a_e/lpr_000b16a_e.shp") %>%
   filter(PRNAME == "Ontario") %>%
@@ -22,6 +24,7 @@ ontario_borders <- read_sf("./2020/2020-10-27 (Canadian Wind Turbines)/lpr_000b1
 
 
 ```{r clean-data}
+# Clean data
 ontario_turbines <- wind_turbine %>%
   filter(province_territory == "Ontario") %>%
   group_by(project_name,
@@ -32,12 +35,13 @@ ontario_turbines <- wind_turbine %>%
             capacity = mean(total_project_capacity_mw)) %>%
   ungroup()
 
+# Convert longitude and latitude to sf
 turbines_sf <- st_as_sf(ontario_turbines,
                         coords = c("longitude_centroid", "latitude_centroid")) %>%
   st_set_crs(4326)
 ```
 
-```{r}
+```{r static-map}
 ggplot() +
   geom_sf(data = ontario_borders,
           fill = "#f7f3e8",
@@ -56,12 +60,12 @@ ggplot() +
 ```{r}
 p <- ggplot() +
   geom_sf(data = ontario_borders,
-          fill = "#4d5b6a",
+          fill = "#f7f3e8",
           colour = NA) +
   geom_sf(data = turbines_sf,
           aes(group = project_name, size = capacity),
           alpha = 0.8,
-          colour = "#f7f3e8",
+          colour = "#4d5b6a",
           show.legend = FALSE) +
   coord_sf() +
   theme_map() +
@@ -70,7 +74,7 @@ p <- ggplot() +
   shadow_mark() +
   labs(title = "Year: {round(frame_time, 0)}")
 
-animate(p, start_pause = 15, end_pause = 40)
+animate(p, start_pause = 10, end_pause = 10)
 ```
 
 
