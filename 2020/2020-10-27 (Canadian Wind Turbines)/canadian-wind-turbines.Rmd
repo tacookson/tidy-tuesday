@@ -9,6 +9,7 @@ output: html_document
 library(tidyverse)
 library(sf)
 library(extrafont)
+library(ggtext)
 
 wind_turbine <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-10-27/wind-turbine.csv')
 ```
@@ -21,7 +22,6 @@ ontario_borders <- read_sf("./2020/2020-10-27 (Canadian Wind Turbines)/lpr_000b1
   filter(PRNAME == "Ontario") %>%
   .$geometry
 ```
-
 
 ```{r clean-data}
 # Clean data
@@ -42,63 +42,36 @@ turbines_sf <- st_as_sf(ontario_turbines,
   st_set_crs(4326)
 ```
 
-```{r static-map}
-ggplot() +
-  geom_sf(data = ontario_borders,
-          fill = "#f7f3e8",
-          colour = NA) +
-  geom_point(data = ontario_turbines,
-          aes(longitude_centroid, latitude_centroid, size = capacity),
-          shape = 16,
-          alpha = 0.8,
-          colour = "#4d5b6a",
-          fill = "#4d5b6a",
-          show.legend = FALSE) +
-  coord_sf()
-```
-
-```{r}
-p <- ggplot() +
-  geom_sf(data = ontario_borders,
-          fill = "#f7f3e8",
-          colour = NA) +
-  geom_sf(data = turbines_sf,
-          aes(group = project_name, size = capacity),
-          alpha = 0.8,
-          colour = "#4d5b6a",
-          show.legend = FALSE) +
-  coord_sf() +
-  theme_map() +
-  transition_time(time = year,
-                  range = c(1991, 2019)) +
-  enter_grow() +
-  shadow_mark(colour = "#4d5b6a",
-              fill = "#4d5b6a",
-              alpha = alpha / 2) +
-  labs(title = "Year: {round(frame_time, 0)}")
-
-animate(p, start_pause = 10, end_pause = 10)
-```
-
-```{r}
-ggplot(turbines_sf) +
+```{r facet-by-decade}
+p <- ggplot(turbines_sf) +
   geom_sf(data = ontario_borders,
           fill = "#f7f3e8",
           colour = NA) +
   geom_sf(aes(group = project_name, size = capacity),
           shape = 16,
           alpha = 0.6,
-          colour = "#4d5b6a",
-          fill = "#4d5b6a",
+          colour = "#212738",
+          fill = "#212738",
           show.legend = FALSE) +
   coord_sf() +
   facet_wrap(~ decade) +
+  labs(title = "<span style = 'color:#f7f3e8; font-size:24pt'>Breeze</span> to <span style = 'color:#212738; font-size:28pt'>***Gale***</span>",
+       subtitle = str_wrap("Ontario's wind energy capacity has increased significantly in the last 20 years. Each point represents a wind turbine project and its <span>**size**</span> reprents the project's <span>**energy capacity**</span>."),
+       caption = "Data: Government of Canada | Visualization: @alexcookson") +
   theme_void() +
-  theme(plot.background = element_rect(fill = "#343c46", colour = NA),
+  theme(plot.background = element_rect(fill = "#B9C2CB", colour = NA),
         text = element_text(family = "IBM Plex Sans",
-                            face = "bold",
-                            colour = "#f7f3e8"))
+                            colour = "#4d5b6a"),
+        plot.title = element_textbox_simple(size = 24, halign = 0.5, margin = margin(15, 10, 10, 10)),
+        plot.subtitle = element_textbox_simple(size = 16, halign = 0.5, margin = margin(10, 160, 30, 160)),
+        plot.caption = element_text(size = 12, margin = margin(0, 10, 0, 10)),
+        strip.text = element_text(size = 18, face = "bold"))
 ```
+
+```{r save}
+ggsave("./2020/2020-10-27 (Canadian Wind Turbines)/ontario-wind-by-decade.png", height = 9, width = 16)
+```
+
 
 
 
