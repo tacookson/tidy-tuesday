@@ -8,11 +8,11 @@ output: html_document
 ```{r setup, warning = FALSE, message = FALSE}
 library(tidyverse)
 library(sf)
-library(ggthemes)
-library(gganimate)
+library(extrafont)
 
 wind_turbine <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-10-27/wind-turbine.csv')
 ```
+
 
 Shapefile source: https://www12.statcan.gc.ca/census-recensement/alternative_alternatif.cfm?l=eng&dispext=zip&teng=lpr_000b16a_e.zip&k=%20%20%20%2027960&loc=http://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/files-fichiers/2016/lpr_000b16a_e.zip
 
@@ -33,7 +33,8 @@ ontario_turbines <- wind_turbine %>%
             latitude_centroid = mean(latitude),
             turbines = n(),
             capacity = mean(total_project_capacity_mw)) %>%
-  ungroup()
+  ungroup() %>%
+  mutate(decade = paste0(decade = year %/% 10 * 10, "s"))
 
 # Convert longitude and latitude to sf
 turbines_sf <- st_as_sf(ontario_turbines,
@@ -46,15 +47,14 @@ ggplot() +
   geom_sf(data = ontario_borders,
           fill = "#f7f3e8",
           colour = NA) +
-  geom_sf(data = turbines_sf,
-          aes(size = capacity),
+  geom_point(data = ontario_turbines,
+          aes(longitude_centroid, latitude_centroid, size = capacity),
           shape = 16,
           alpha = 0.8,
           colour = "#4d5b6a",
           fill = "#4d5b6a",
           show.legend = FALSE) +
-  coord_sf() +
-  theme_map()
+  coord_sf()
 ```
 
 ```{r}
@@ -71,11 +71,35 @@ p <- ggplot() +
   theme_map() +
   transition_time(time = year,
                   range = c(1991, 2019)) +
-  shadow_mark() +
+  enter_grow() +
+  shadow_mark(colour = "#4d5b6a",
+              fill = "#4d5b6a",
+              alpha = alpha / 2) +
   labs(title = "Year: {round(frame_time, 0)}")
 
 animate(p, start_pause = 10, end_pause = 10)
 ```
+
+```{r}
+ggplot(turbines_sf) +
+  geom_sf(data = ontario_borders,
+          fill = "#f7f3e8",
+          colour = NA) +
+  geom_sf(aes(group = project_name, size = capacity),
+          shape = 16,
+          alpha = 0.6,
+          colour = "#4d5b6a",
+          fill = "#4d5b6a",
+          show.legend = FALSE) +
+  coord_sf() +
+  facet_wrap(~ decade) +
+  theme_void() +
+  theme(plot.background = element_rect(fill = "#343c46", colour = NA),
+        text = element_text(family = "IBM Plex Sans",
+                            face = "bold",
+                            colour = "#f7f3e8"))
+```
+
 
 
 
