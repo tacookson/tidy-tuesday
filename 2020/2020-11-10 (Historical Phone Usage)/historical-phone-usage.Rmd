@@ -1,0 +1,22 @@
+---
+title: "historical-phone-usage"
+author: "Alex Cookson"
+date: "12/11/2020"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+
+mobile <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-11-10/mobile.csv')
+landline <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-11-10/landline.csv')
+```
+
+```{r eda}
+mobile %>%
+  filter(entity == "Tanzania") %>%
+  ggplot(aes(year, mobile_subs)) +
+  geom_point(aes(size = gdp_per_cap)) +
+  geom_line()
+```
+
