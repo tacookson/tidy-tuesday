@@ -1,0 +1,19 @@
+---
+title: "washington-trails"
+author: "Alex Cookson"
+date: "23/11/2020"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+
+hike_data <- read_rds(url('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-11-24/hike_data.rds'))
+```
+
+```{r eda}
+hike_data %>%
+  head()
+```
+
+
