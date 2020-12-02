@@ -1,0 +1,36 @@
+---
+title: "toronto-shelters"
+author: "Alex Cookson"
+date: "01/12/2020"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+library(lubridate)
+
+shelters <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-12-01/shelters.csv')
+```
+
+```{r eda}
+shelters %>%
+  group_by(occupancy_date = as_date(occupancy_date)) %>%
+  summarise(occupancy = sum(occupancy, na.rm = TRUE),
+            capacity = sum(capacity, na.rm = TRUE),
+            pct_capacity = occupancy / capacity) %>%
+  ggplot(aes(occupancy_date, pct_capacity)) +
+  geom_line() +
+  facet_wrap(~ year(occupancy_date), scales = "free_x")
+```
+
+```{r day-of-month}
+shelters %>%
+  mutate(day = day(occupancy_date)) %>%
+  group_by(year = year(occupancy_date), day) %>%
+  summarise(occupancy = sum(occupancy, na.rm = TRUE),
+            capacity = sum(capacity, na.rm = TRUE),
+            pct_capacity = occupancy / capacity) %>%
+  ggplot(aes(day, pct_capacity, colour = as.factor(year))) +
+  geom_line()
+```
+

@@ -8,12 +8,39 @@ output: html_document
 ```{r setup}
 library(tidyverse)
 
-hike_data <- read_rds(url('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-11-24/hike_data.rds'))
+hike_data_raw <- read_rds(url('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-11-24/hike_data.rds'))
 ```
 
-```{r eda}
-hike_data %>%
-  head()
+```{r clean-data}
+hike_data <- hike_data_raw %>%
+  # De-duplicate Cap Sante Park
+  distinct(name, location, .keep_all = TRUE) %>%
+  # Add key/id column to avoid issues with different trails having the same name
+  mutate(trail_id = row_number()) %>%
+  # Move trail_id to front for convenience
+  relocate(trail_id) %>%
+  # Parse numbers from numeric fields coded as character
+  mutate(across(.cols = c(length, gain, highpoint, rating), parse_number)) %>%
+  # Rename numerical columns so that it's clear what the numbers refer to
+  rename(length_miles = length,
+         gain_ft = gain,
+         highpoint_ft = highpoint) %>%
+  # Ratings of zero are actually trails without any votes
+  # (based on spot-check of three trails with rating of zero)
+  mutate(rating = ifelse(rating == 0, NA, rating))
+
+# Create separate features dataframe with just trail_id and feature
+# Why? Because features are on multiple rows and I want to keep hike_data as one trail = one row
+features <- hike_data %>%
+  select(trail_id, features) %>%
+  unnest(features) %>%
+  # Changed features field to singular because it bugs me
+  rename(feature = features)
 ```
+
+```{r}
+
+```
+
 
 
