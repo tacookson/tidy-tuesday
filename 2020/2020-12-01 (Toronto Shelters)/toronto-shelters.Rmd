@@ -34,3 +34,15 @@ shelters %>%
   geom_line()
 ```
 
+```{r}
+babynames %>%
+  filter(year == 2007,
+         str_detect(name, "^B")) %>%
+  group_by(sex) %>%
+  top_n(100) %>%
+  arrange(desc(prop)) %>%
+  ungroup() %>%
+  write_csv("names-13-this-year.csv")
+```
+
+

@@ -1,0 +1,13 @@
+---
+title: "ninja-warrior"
+author: "Alex Cookson"
+date: "15/12/2020"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+
+ninja_warrior <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-12-15/ninja_warrior.csv')
+```
+
