@@ -1,0 +1,17 @@
+---
+title: "transit-costs"
+author: "Alex Cookson"
+date: "05/01/2021"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+
+transit_cost <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-01-05/transit_cost.csv')
+```
+
+```{r eda}
+
+```
+
