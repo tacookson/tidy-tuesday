@@ -1,0 +1,21 @@
+---
+title: "art-collections"
+author: "Alex Cookson"
+date: "13/01/2021"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+
+artwork <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-01-12/artwork.csv')
+artists <- readr::read_csv("https://github.com/tategallery/collection/raw/master/artist_data.csv")
+```
+
+```{r eda}
+artwork %>%
+  count(acquisitionYear) %>%
+  ggplot(aes(acquisitionYear, n)) +
+  geom_col()
+```
+
