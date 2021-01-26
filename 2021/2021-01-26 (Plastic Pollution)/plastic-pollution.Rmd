@@ -1,0 +1,13 @@
+---
+title: "plastic-pollution"
+author: "Alex Cookson"
+date: "26/01/2021"
+output: html_document
+---
+
+```{r setup, warning = FALSE, message = FALSE}
+library(tidyverse)
+
+plastics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-01-26/plastics.csv')
+```
+
