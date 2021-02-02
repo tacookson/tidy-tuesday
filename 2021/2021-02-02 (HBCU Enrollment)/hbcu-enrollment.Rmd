@@ -1,0 +1,13 @@
+---
+title: "hbcu-enrollment"
+author: "Alex Cookson"
+date: "01/02/2021"
+output: html_document
+---
+
+```{r setup, warning = FALSE, message = FALSE}
+library(tidyverse)
+
+hbcu_all <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-02-02/hbcu_all.csv')
+```
+
