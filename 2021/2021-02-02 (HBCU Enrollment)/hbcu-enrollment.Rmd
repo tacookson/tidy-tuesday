@@ -7,7 +7,33 @@ output: html_document
 
 ```{r setup, warning = FALSE, message = FALSE}
 library(tidyverse)
+library(janitor)
 
-hbcu_all <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-02-02/hbcu_all.csv')
+hbcu_all <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-02-02/hbcu_all.csv') %>%
+  clean_names()
 ```
+
+```{r by-gender}
+hbcu_by_gender <- hbcu_all %>%
+  select(year, males, females) %>%
+  pivot_longer(males:females,
+               names_to = "gender",
+               values_to = "students") %>%
+  mutate(gender = str_remove(gender, "s$"))
+```
+
+
+
+```{r by-program}
+hbcu_by_program <- hbcu_all %>%
+  select(year,
+         contains(c("public", "private")),
+         -contains("total")) %>%
+  pivot_longer(cols = x4_year_public:x2_year_private,
+               names_pattern = "[x_]?(.*)_(.*)",
+               names_to = c("program_length", "public_private"),
+               values_to = "students") %>%
+  mutate(program_length = paste(parse_number(program_length), "years"))
+```
+
 
